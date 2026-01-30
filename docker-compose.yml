@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  webapp:
+    build:
+      context: .
+      dockerfile: QuanLyTienDoSinhVien/Dockerfile
+    container_name: quanlytiendo-app
+    ports:
+      - "5000:8080"
+      - "5001:8081"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      # Connection string for Docker to connect to host SQL Server
+      # Note: Trusted_Connection doesn't work in Docker, use SQL Authentication instead
+      - ConnectionStrings__DefaultConnection=Server=host.docker.internal\\SQLEXPRESS;Database=CS434;User Id=sa;Password=YOUR_SA_PASSWORD;TrustServerCertificate=True;MultipleActiveResultSets=true
+    networks:
+      - quanlytiendo-network
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+networks:
+  quanlytiendo-network:
+    driver: bridge

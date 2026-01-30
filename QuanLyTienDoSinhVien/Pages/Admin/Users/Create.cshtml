@@ -1,0 +1,218 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Admin.Users.CreateModel
+@{
+    ViewData["Title"] = "Tạo Tài Khoản Mới";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0"><i class="bi bi-person-plus-fill"></i> Tạo Tài Khoản Mới</h4>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> @Model.ErrorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form method="post">
+                        <div class="mb-3">
+                            <label asp-for="Input.Username" class="form-label">
+                                Tên Đăng Nhập <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Input.Username" class="form-control" placeholder="Nhập tên đăng nhập" />
+                            <span asp-validation-for="Input.Username" class="text-danger"></span>
+                            <small class="form-text text-muted">Tên đăng nhập phải là duy nhất trong hệ thống.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.Password" class="form-label">
+                                Mật Khẩu <span class="text-danger">*</span>
+                            </label>
+                            <div class="input-group">
+                                <input asp-for="Input.Password" class="form-control" placeholder="Nhập mật khẩu" />
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="bi bi-eye" id="toggleIcon"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            <small class="form-text text-muted">Mật khẩu phải có ít nhất 6 ký tự.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.ConfirmPassword" class="form-label">
+                                Xác Nhận Mật Khẩu <span class="text-danger">*</span>
+                            </label>
+                            <input asp-for="Input.ConfirmPassword" class="form-control" placeholder="Nhập lại mật khẩu" />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Input.RoleId" class="form-label">
+                                Vai Trò <span class="text-danger">*</span>
+                            </label>
+                            <select asp-for="Input.RoleId" class="form-select" id="roleSelect">
+                                <option value="">-- Chọn vai trò --</option>
+                                @foreach (var role in Model.Roles)
+                                {
+                                    <option value="@role.Id">@role.Name</option>
+                                }
+                            </select>
+                            <span asp-validation-for="Input.RoleId" class="text-danger"></span>
+                        </div>
+
+                        <!-- Student specific fields -->
+                        <div id="studentFields" style="display: none;">
+                            <div class="card mb-3 border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0">Thông Tin Sinh Viên</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label asp-for="Input.StudentCode" class="form-label">
+                                            Mã Sinh Viên <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="Input.StudentCode" class="form-control" placeholder="Ví dụ: SV001" />
+                                        <span asp-validation-for="Input.StudentCode" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label asp-for="Input.FullName" class="form-label">
+                                            Họ và Tên <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="Input.FullName" class="form-control" placeholder="Nhập họ và tên" />
+                                        <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label asp-for="Input.Email" class="form-label">Email</label>
+                                        <input asp-for="Input.Email" class="form-control" placeholder="email@example.com" />
+                                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label asp-for="Input.Phone" class="form-label">Số Điện Thoại</label>
+                                        <input asp-for="Input.Phone" class="form-control" placeholder="0123456789" />
+                                        <span asp-validation-for="Input.Phone" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label asp-for="Input.ClassId" class="form-label">Lớp</label>
+                                        <select asp-for="Input.ClassId" class="form-select">
+                                            <option value="">-- Chọn lớp --</option>
+                                            @foreach (var cls in Model.Classes)
+                                            {
+                                                <option value="@cls.Id">@cls.Name</option>
+                                            }
+                                        </select>
+                                        <span asp-validation-for="Input.ClassId" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label asp-for="Input.Address" class="form-label">Địa Chỉ</label>
+                                        <textarea asp-for="Input.Address" class="form-control" rows="2" placeholder="Nhập địa chỉ"></textarea>
+                                        <span asp-validation-for="Input.Address" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Lecturer specific fields -->
+                        <div id="lecturerFields" style="display: none;">
+                            <div class="card mb-3 border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0">Thông Tin Giảng Viên</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label asp-for="Input.FullName" class="form-label">
+                                            Họ và Tên <span class="text-danger">*</span>
+                                        </label>
+                                        <input asp-for="Input.FullName" class="form-control" placeholder="Nhập họ và tên" />
+                                        <span asp-validation-for="Input.FullName" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label asp-for="Input.Email" class="form-label">Email</label>
+                                        <input asp-for="Input.Email" class="form-control" placeholder="email@example.com" />
+                                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label asp-for="Input.Phone" class="form-label">Số Điện Thoại</label>
+                                        <input asp-for="Input.Phone" class="form-control" placeholder="0123456789" />
+                                        <span asp-validation-for="Input.Phone" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="form-check">
+                                <input asp-for="Input.IsActive" class="form-check-input" />
+                                <label asp-for="Input.IsActive" class="form-check-label">
+                                    Kích hoạt tài khoản ngay
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/Admin/Users/Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Hủy
+                            </a>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-check-circle"></i> Tạo Tài Khoản
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Toggle password visibility
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordInput = document.getElementById('Input_Password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('bi-eye');
+                toggleIcon.classList.add('bi-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('bi-eye-slash');
+                toggleIcon.classList.add('bi-eye');
+            }
+        });
+
+        // Show/hide role-specific fields
+        document.getElementById('roleSelect').addEventListener('change', function () {
+            const selectedRole = this.options[this.selectedIndex].text;
+            const studentFields = document.getElementById('studentFields');
+            const lecturerFields = document.getElementById('lecturerFields');
+
+            studentFields.style.display = 'none';
+            lecturerFields.style.display = 'none';
+
+            if (selectedRole === 'Student') {
+                studentFields.style.display = 'block';
+            } else if (selectedRole === 'Lecturer' || selectedRole === 'Teacher') {
+                lecturerFields.style.display = 'block';
+            }
+        });
+    </script>
+}
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+}
