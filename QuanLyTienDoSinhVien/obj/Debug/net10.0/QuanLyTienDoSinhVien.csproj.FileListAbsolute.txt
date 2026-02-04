@@ -218,4 +218,5 @@ D:\CS434_Nhóm 5\QuanLyTienDoSinhVien\QuanLyTienDoSinhVien\obj\Debug\net10.0\ref
 D:\CS434_Nhóm 5\QuanLyTienDoSinhVien\QuanLyTienDoSinhVien\obj\Debug\net10.0\QuanLyTienDoSinhVien.pdb
 D:\CS434_Nhóm 5\QuanLyTienDoSinhVien\QuanLyTienDoSinhVien\obj\Debug\net10.0\QuanLyTienDoSinhVien.genruntimeconfig.cache
 D:\CS434_Nhóm 5\QuanLyTienDoSinhVien\QuanLyTienDoSinhVien\obj\Debug\net10.0\ref\QuanLyTienDoSinhVien.dll
+D:\CS434_Nhóm 5\QuanLyTienDoSinhVien\QuanLyTienDoSinhVien\obj\Debug\net10.0\QuanLyTienDoSinhVien.sourcelink.json
 D:\CS434_Nhóm 5\QuanLyTienDoSinhVien\QuanLyTienDoSinhVien\obj\Debug\net10.0\staticwebassets.upToDateCheck.txt

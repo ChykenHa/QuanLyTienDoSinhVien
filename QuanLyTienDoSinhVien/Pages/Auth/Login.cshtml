@@ -8,48 +8,80 @@
 <html lang="vi">
 <head>
     <meta charset="utf-8" />
-    <title>Đăng nhập</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Đăng nhập - Quản Lý Tiến Độ</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="~/css/login.css" asp-append-version="true" />
 </head>
-
 <body>
     <div class="login-container">
         <div class="login-card">
-            <div class="login-header text-center">
-                <i class="fas fa-graduation-cap fa-3x mb-3"></i>
-                <h3>Quản Lý Tiến Độ</h3>
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h1 class="login-title">Quản Lý Tiến Độ</h1>
+                <p class="login-subtitle">Hệ thống học tập sinh viên</p>
             </div>
 
             @if (!string.IsNullOrEmpty(Model.ErrorMessage))
             {
                 <div class="alert alert-danger">
-                    <i class="fas fa-exclamation-circle"></i>
-                    @Model.ErrorMessage
+                    <i class="fas fa-exclamation-circle"></i> @Model.ErrorMessage
                 </div>
             }
 
-            <form method="post">
-                <div class="mb-3">
-                    <label class="form-label">Tên đăng nhập</label>
-                    <input asp-for="Input.Username" class="form-control" />
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">
+                    <i class="fas fa-check-circle"></i> @TempData["SuccessMessage"]
+                </div>
+            }
+
+            <form method="post" class="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="username">Tên đăng nhập</label>
+                    <div class="form-input-wrapper">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" 
+                               id="username" 
+                               name="Input.Username" 
+                               class="form-input" 
+                               placeholder="Nhập tên đăng nhập"
+                               required
+                               asp-for="Input.Username" />
+                    </div>
                     <span asp-validation-for="Input.Username" class="text-danger"></span>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">Mật khẩu</label>
-                    <input asp-for="Input.Password" type="password" class="form-control" />
+                <div class="form-group">
+                    <label class="form-label" for="password">Mật khẩu</label>
+                    <div class="form-input-wrapper">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" 
+                               id="password" 
+                               name="Input.Password" 
+                               class="form-input" 
+                               placeholder="Nhập mật khẩu"
+                               required
+                               asp-for="Input.Password" />
+                    </div>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
 
-                <div class="form-check mb-3">
-                    <input asp-for="Input.RememberMe" class="form-check-input" />
-                    <label class="form-check-label">Ghi nhớ đăng nhập</label>
+                <div class="form-options">
+                    <div class="remember-me">
+                        <input type="checkbox" 
+                               id="rememberMe" 
+                               name="Input.RememberMe"
+                               asp-for="Input.RememberMe" />
+                        <label for="rememberMe">Ghi nhớ đăng nhập</label>
+                    </div>
+                    <a href="#" class="forgot-password">Quên mật khẩu?</a>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100">
+                <button type="submit" class="login-button">
                     <i class="fas fa-sign-in-alt"></i> Đăng nhập
                 </button>
             </form>
@@ -58,5 +90,7 @@
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
 </body>
 </html>

@@ -12,7 +12,7 @@
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body>
-    @{
+    @{ 
         var userName = User.FindFirst("FullName")?.Value ?? User.Identity?.Name ?? "User";
         var userRole = User.FindFirst(ClaimTypes.Role)?.Value ?? "Guest";
         var userInitials = string.Join("", userName.Split(' ').Select(n => n.Length > 0 ? n[0].ToString() : ""));
@@ -60,7 +60,57 @@
 
     <!-- Sidebar -->
     <aside class="sidebar">
-        @RenderSection("Sidebar", required: false)
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="sidebar-sticky">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Dashboard") ? "active" : "")" href="/Admin/Dashboard">
+                            <i class="fas fa-home"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Users") ? "active" : "")" href="/Admin/Users/Index">
+                            <i class="fas fa-users"></i> Quản lý người dùng
+                        </a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Subjects") ? "active" : "")" href="/Admin/Subjects/Index">
+                            <i class="fas fa-book"></i> Quản lý môn học
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Majors") ? "active" : "")" href="/Admin/Majors/Index">
+                            <i class="fas fa-university"></i> Quản lý ngành
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Lecturers") ? "active" : "")" href="/Admin/Lecturers/Index">
+                            <i class="fas fa-chalkboard-teacher"></i> Phân công giảng viên
+                        </a>
+                    </li>
+                     <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Configuration") ? "active" : "")" href="/Admin/Configuration/Index">
+                            <i class="fas fa-cogs"></i> Cấu hình hệ thống
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Reports") ? "active" : "")" href="/Admin/Reports/Index">
+                            <i class="fas fa-chart-bar"></i> Báo cáo thống kê
+                        </a>
+                    </li>
+                     <li class="nav-item mt-3">
+                        <a class="nav-link text-danger" href="/Auth/Logout">
+                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        }
+        else
+        {
+            @RenderSection("Sidebar", required: false)
+        }
     </aside>
 
     <!-- Main Content -->

@@ -196,20 +196,41 @@
         });
 
         // Show/hide role-specific fields
-        document.getElementById('roleSelect').addEventListener('change', function () {
-            const selectedRole = this.options[this.selectedIndex].text;
+        function toggleRoleFields() {
+            const roleSelect = document.getElementById('roleSelect');
+            const selectedRole = roleSelect.options[roleSelect.selectedIndex].text;
             const studentFields = document.getElementById('studentFields');
             const lecturerFields = document.getElementById('lecturerFields');
 
+            // Function to disable/enable inputs within a container
+            const setInputsDisabled = (container, disabled) => {
+                const inputs = container.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    input.disabled = disabled;
+                });
+            };
+
             studentFields.style.display = 'none';
             lecturerFields.style.display = 'none';
+            
+            // Default: disable both
+            setInputsDisabled(studentFields, true);
+            setInputsDisabled(lecturerFields, true);
 
             if (selectedRole === 'Student') {
                 studentFields.style.display = 'block';
+                setInputsDisabled(studentFields, false);
             } else if (selectedRole === 'Lecturer' || selectedRole === 'Teacher') {
                 lecturerFields.style.display = 'block';
+                setInputsDisabled(lecturerFields, false);
             }
-        });
+        }
+
+        // Add event listener for change
+        document.getElementById('roleSelect').addEventListener('change', toggleRoleFields);
+
+        // Run on load to set initial state (important for validation errors)
+        document.addEventListener('DOMContentLoaded', toggleRoleFields);
     </script>
 }
 
