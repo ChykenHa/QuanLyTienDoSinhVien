@@ -1,4 +1,4 @@
-# Quản Lý Tiến Độ Sinh Viên (Student Progress Management)
+# CS434B_Nhóm 5 Quản Lý Tiến Độ Sinh Viên (Student Progress Management)
 
 A web application for managing student academic progress, built with ASP.NET Core and Entity Framework Core.
 
