@@ -1,0 +1,8 @@
+[Tt]ask.md
+[Ii]mplementation_plan.md
+[Ww]alkthrough.md
+.agent/
+.vs/
+obj/
+bin/
+*.user
