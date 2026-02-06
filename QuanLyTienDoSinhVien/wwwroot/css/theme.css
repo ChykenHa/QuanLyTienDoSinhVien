@@ -191,82 +191,94 @@ body {
     width: 260px;
     height: calc(100vh - 70px);
     background-color: var(--dark-color);
-    padding: 20px 0;
+    padding: 0;
     overflow-y: auto;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
-.sidebar-brand {
-    padding: 0 20px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+.sidebar-sticky {
+    padding: 20px 0;
+}
+
+.menu-section {
     margin-bottom: 20px;
 }
 
-.brand-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: var(--white);
-    text-decoration: none;
+.sidebar-heading {
+    padding: 0 25px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.4);
+    font-weight: 700;
+    margin-bottom: 10px;
 }
 
-.brand-icon {
-    width: 35px;
-    height: 35px;
-    background-color: var(--primary-color);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.brand-name {
-    font-size: 16px;
-    font-weight: 600;
-}
-
-.sidebar-menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-
-.menu-item {
-    margin-bottom: 5px;
+.nav-item {
+    margin-bottom: 2px;
 }
 
 .menu-link {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 12px 20px;
-    color: rgba(255, 255, 255, 0.7);
+    padding: 12px 25px;
+    color: rgba(255, 255, 255, 0.75);
     text-decoration: none;
-    transition: all 0.3s ease;
-    border-left: 3px solid transparent;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 4px solid transparent;
+    position: relative;
+    overflow: hidden;
 }
 
 .menu-link:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: rgba(255, 255, 255, 0.08);
     color: var(--white);
+    padding-left: 30px; /* Slight movement to right */
     border-left-color: var(--accent-color);
 }
 
 .menu-link.active {
-    background-color: rgba(136, 189, 242, 0.1);
+    background: linear-gradient(90deg, rgba(136, 189, 242, 0.15), transparent);
     color: var(--white);
     border-left-color: var(--accent-color);
+    font-weight: 600;
+}
+
+.menu-link.active .menu-icon {
+    color: var(--accent-color);
 }
 
 .menu-icon {
-    width: 20px;
+    width: 24px;
     text-align: center;
     font-size: 18px;
+    transition: transform 0.2s ease;
+}
+
+.menu-link:hover .menu-icon {
+    transform: scale(1.1);
 }
 
 .menu-text {
     font-size: 14px;
     font-weight: 500;
+}
+
+/* Custom Scrollbar for sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+}
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
 }
 
 /* Main Content */

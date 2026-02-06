@@ -18,6 +18,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Class> Classes { get; set; }
 
+
+
     public virtual DbSet<Enrollment> Enrollments { get; set; }
 
     public virtual DbSet<Lecturer> Lecturers { get; set; }
@@ -104,7 +106,13 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.SubjectId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_enrollments_subjects");
+            entity.HasOne(d => d.Subject).WithMany(p => p.Enrollments)
+                .HasForeignKey(d => d.SubjectId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_enrollments_subjects");
         });
+
+
 
         modelBuilder.Entity<Lecturer>(entity =>
         {

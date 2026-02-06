@@ -1,0 +1,41 @@
+@page "{id:int}"
+@model QuanLyTienDoSinhVien.Pages.Admin.Majors.DeleteModel
+@{
+    ViewData["Title"] = "Xóa Ngành";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fas fa-trash"></i> Xóa Ngành</h2>
+        </div>
+    </div>
+
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Xác Nhận Xóa</h5>
+        </div>
+        <div class="card-body">
+            <p>Bạn có chắc chắn muốn xóa ngành này?</p>
+            <dl class="row">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.Major.Id</dd>
+                <dt class="col-sm-3">Tên Ngành</dt>
+                <dd class="col-sm-9"><strong>@Model.Major.Name</strong></dd>
+                <dt class="col-sm-3">Thuộc Khoa</dt>
+                <dd class="col-sm-9">@(Model.Major.Faculty?.Name ?? "Chưa gán")</dd>
+            </dl>
+            <form method="post">
+                <input type="hidden" asp-for="Major.Id" />
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Xóa
+                    </button>
+                    <a asp-page="Index" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Hủy
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

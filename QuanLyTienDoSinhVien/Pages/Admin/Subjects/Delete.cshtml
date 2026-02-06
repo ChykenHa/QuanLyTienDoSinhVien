@@ -1,0 +1,43 @@
+@page "{id:int}"
+@model QuanLyTienDoSinhVien.Pages.Admin.Subjects.DeleteModel
+@{
+    ViewData["Title"] = "Xóa Môn Học";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fas fa-trash"></i> Xóa Môn Học</h2>
+        </div>
+    </div>
+
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0">Xác Nhận Xóa</h5>
+        </div>
+        <div class="card-body">
+            <p>Bạn có chắc chắn muốn xóa môn học này?</p>
+            <dl class="row">
+                <dt class="col-sm-3">ID</dt>
+                <dd class="col-sm-9">@Model.Subject.Id</dd>
+                <dt class="col-sm-3">Mã Môn</dt>
+                <dd class="col-sm-9"><code>@Model.Subject.Code</code></dd>
+                <dt class="col-sm-3">Tên Môn Học</dt>
+                <dd class="col-sm-9"><strong>@Model.Subject.Name</strong></dd>
+                <dt class="col-sm-3">Số Tín Chỉ</dt>
+                <dd class="col-sm-9">@Model.Subject.Credit</dd>
+            </dl>
+            <form method="post">
+                <input type="hidden" asp-for="Subject.Id" />
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Xóa
+                    </button>
+                    <a asp-page="Index" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Hủy
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

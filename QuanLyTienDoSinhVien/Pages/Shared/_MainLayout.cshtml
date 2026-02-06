@@ -2,6 +2,7 @@
 
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,8 +12,9 @@
     <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
+
 <body>
-    @{ 
+    @{
         var userName = User.FindFirst("FullName")?.Value ?? User.Identity?.Name ?? "User";
         var userRole = User.FindFirst(ClaimTypes.Role)?.Value ?? "Guest";
         var userInitials = string.Join("", userName.Split(' ').Select(n => n.Length > 0 ? n[0].ToString() : ""));
@@ -63,48 +65,103 @@
         @if (User.IsInRole("Admin"))
         {
             <div class="sidebar-sticky">
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Dashboard") ? "active" : "")" href="/Admin/Dashboard">
-                            <i class="fas fa-home"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Users") ? "active" : "")" href="/Admin/Users/Index">
-                            <i class="fas fa-users"></i> Quản lý người dùng
-                        </a>
-                    </li>
-                     <li class="nav-item">
-                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Subjects") ? "active" : "")" href="/Admin/Subjects/Index">
-                            <i class="fas fa-book"></i> Quản lý môn học
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Majors") ? "active" : "")" href="/Admin/Majors/Index">
-                            <i class="fas fa-university"></i> Quản lý ngành
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Lecturers") ? "active" : "")" href="/Admin/Lecturers/Index">
-                            <i class="fas fa-chalkboard-teacher"></i> Phân công giảng viên
-                        </a>
-                    </li>
-                     <li class="nav-item">
-                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Configuration") ? "active" : "")" href="/Admin/Configuration/Index">
-                            <i class="fas fa-cogs"></i> Cấu hình hệ thống
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link @(Context.Request.Path.StartsWithSegments("/Admin/Reports") ? "active" : "")" href="/Admin/Reports/Index">
-                            <i class="fas fa-chart-bar"></i> Báo cáo thống kê
-                        </a>
-                    </li>
-                     <li class="nav-item mt-3">
-                        <a class="nav-link text-danger" href="/Auth/Logout">
-                            <i class="fas fa-sign-out-alt"></i> Đăng xuất
-                        </a>
-                    </li>
-                </ul>
+                <div class="sidebar-menu-container">
+                    <!-- General -->
+                    <div class="menu-section">
+                        <h6 class="sidebar-heading">CHUNG</h6>
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link menu-link @(Context.Request.Path.StartsWithSegments("/Admin/Dashboard") ? "active" : "")"
+                                    href="/Admin/Dashboard">
+                                    <span class="menu-icon"><i class="fas fa-home"></i></span>
+                                    <span class="menu-text">Dashboard</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Management -->
+                    <div class="menu-section">
+                        <h6 class="sidebar-heading">QUẢN LÝ</h6>
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link menu-link @(Context.Request.Path.StartsWithSegments("/Admin/Users") ? "active" : "")"
+                                    href="/Admin/Users/Index">
+                                    <span class="menu-icon"><i class="fas fa-users"></i></span>
+                                    <span class="menu-text">Người dùng</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link @(Context.Request.Path.StartsWithSegments("/Admin/Lecturers") ? "active" : "")"
+                                    href="/Admin/Lecturers/Index">
+                                    <span class="menu-icon"><i class="fas fa-chalkboard-teacher"></i></span>
+                                    <span class="menu-text">Giảng viên</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Academic -->
+                    <div class="menu-section">
+                        <h6 class="sidebar-heading">ĐÀO TẠO</h6>
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link menu-link @(Context.Request.Path.StartsWithSegments("/Admin/Majors") ? "active" : "")"
+                                    href="/Admin/Majors/Index">
+                                    <span class="menu-icon"><i class="fas fa-university"></i></span>
+                                    <span class="menu-text">Ngành học</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link @(Context.Request.Path.StartsWithSegments("/Admin/Classes") ? "active" : "")"
+                                    href="/Admin/Classes/Index">
+                                    <span class="menu-icon"><i class="fas fa-chalkboard"></i></span>
+                                    <span class="menu-text">Lớp học</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link @(Context.Request.Path.StartsWithSegments("/Admin/Subjects") ? "active" : "")"
+                                    href="/Admin/Subjects/Index">
+                                    <span class="menu-icon"><i class="fas fa-book"></i></span>
+                                    <span class="menu-text">Môn học</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- System -->
+                    <div class="menu-section">
+                        <h6 class="sidebar-heading">HỆ THỐNG</h6>
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link menu-link @(Context.Request.Path.StartsWithSegments("/Admin/Configuration") ? "active" : "")"
+                                    href="/Admin/Configuration/Index">
+                                    <span class="menu-icon"><i class="fas fa-cogs"></i></span>
+                                    <span class="menu-text">Cấu hình</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link @(Context.Request.Path.StartsWithSegments("/Admin/Reports") ? "active" : "")"
+                                    href="/Admin/Reports/Index">
+                                    <span class="menu-icon"><i class="fas fa-chart-bar"></i></span>
+                                    <span class="menu-text">Báo cáo</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Logout -->
+                    <div class="menu-section mt-3">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link menu-link text-danger" href="/Auth/Logout">
+                                    <span class="menu-icon"><i class="fas fa-sign-out-alt"></i></span>
+                                    <span class="menu-text">Đăng xuất</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         }
         else
@@ -123,4 +180,5 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>

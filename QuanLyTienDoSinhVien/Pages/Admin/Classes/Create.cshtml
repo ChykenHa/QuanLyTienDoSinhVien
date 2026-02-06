@@ -1,0 +1,45 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Admin.Classes.CreateModel
+@{
+    ViewData["Title"] = "Thêm Lớp Mới";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fas fa-plus-circle"></i> Thêm Lớp Mới</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="Class.Name" class="form-label">Tên Lớp</label>
+                    <input asp-for="Class.Name" class="form-control" placeholder="Nhập tên lớp..." />
+                    <span asp-validation-for="Class.Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Class.MajorId" class="form-label">Thuộc Ngành</label>
+                    <select asp-for="Class.MajorId" asp-items="Model.Majors" class="form-select">
+                        <option value="">-- Chọn Ngành --</option>
+                    </select>
+                    <span asp-validation-for="Class.MajorId" class="text-danger"></span>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                    <a asp-page="Index" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Hủy
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
