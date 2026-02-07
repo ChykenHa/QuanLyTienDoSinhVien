@@ -1,0 +1,175 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Admin.DashboardModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="mb-3">
+                <i class="bi bi-speedometer2"></i> Admin Dashboard
+            </h2>
+            <p class="text-muted">Chào mừng, @User.Identity?.Name</p>
+        </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card border-primary">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Tổng Người Dùng</h6>
+                            <h3 class="mb-0">@Model.TotalUsers</h3>
+                        </div>
+                        <div class="text-primary">
+                            <i class="bi bi-people-fill" style="font-size: 2.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Sinh Viên</h6>
+                            <h3 class="mb-0">@Model.TotalStudents</h3>
+                        </div>
+                        <div class="text-success">
+                            <i class="bi bi-mortarboard-fill" style="font-size: 2.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Giảng Viên</h6>
+                            <h3 class="mb-0">@Model.TotalLecturers</h3>
+                        </div>
+                        <div class="text-info">
+                            <i class="bi bi-person-badge-fill" style="font-size: 2.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card border-warning">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-2">Tài Khoản Khóa</h6>
+                            <h3 class="mb-0">@Model.InactiveUsers</h3>
+                        </div>
+                        <div class="text-warning">
+                            <i class="bi bi-lock-fill" style="font-size: 2.5rem;"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="bi bi-lightning-fill"></i> Thao Tác Nhanh</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <a href="/Admin/Users/Create" class="btn btn-success btn-lg w-100">
+                                <i class="bi bi-person-plus-fill"></i> Tạo Tài Khoản Mới
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="/Admin/Users/Index" class="btn btn-primary btn-lg w-100">
+                                <i class="bi bi-list-ul"></i> Quản Lý Người Dùng
+                            </a>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <a href="/Admin/Reports" class="btn btn-info btn-lg w-100">
+                                <i class="bi bi-file-earmark-bar-graph"></i> Báo Cáo Hệ Thống
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="bi bi-clock-history"></i> Người Dùng Mới Nhất</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RecentUsers != null && Model.RecentUsers.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Tên Đăng Nhập</th>
+                                        <th>Vai Trò</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Ngày Tạo</th>
+                                        <th>Đăng Nhập Cuối</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model.RecentUsers)
+                                    {
+                                        <tr>
+                                            <td>@user.Username</td>
+                                            <td>
+                                                <span class="badge bg-@(user.Role.Name == "Admin" ? "danger" : user.Role.Name == "Lecturer" ? "info" : "success")">
+                                                    @user.Role.Name
+                                                </span>
+                                            </td>
+                                            <td>
+                                                @if (user.IsActive == true)
+                                                {
+                                                    <span class="badge bg-success">Hoạt động</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">Khóa</span>
+                                                }
+                                            </td>
+                                            <td>@user.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@(user.LastLogin?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa đăng nhập")</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">Không có người dùng mới.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+}

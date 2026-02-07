@@ -1,0 +1,103 @@
+is_global = true
+build_property.TargetFramework = net10.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v10.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = QuanLyTienDoSinhVien
+build_property.RootNamespace = QuanLyTienDoSinhVien
+build_property.ProjectDir = D:\QuanLyTienDoSinhVien-master\QuanLyTienDoSinhVien-master\QuanLyTienDoSinhVien\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\QuanLyTienDoSinhVien-master\QuanLyTienDoSinhVien-master\QuanLyTienDoSinhVien
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 10.0
+build_property.EnableCodeStyleSeverity = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Admin/Configuration/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ29uZmlndXJhdGlvblxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Admin/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Admin/Lecturers/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cTGVjdHVyZXJzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Admin/Majors/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cTWFqb3JzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Admin/Reports/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cUmVwb3J0c1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Admin/Subjects/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cU3ViamVjdHNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Admin/Users/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVXNlcnNcQ3JlYXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Admin/Users/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVXNlcnNcRGVsZXRlLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Admin/Users/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVXNlcnNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Admin/Users/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVXNlcnNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Auth/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Auth/Logout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aFxMb2dvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Shared/_MainLayout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9NYWluTGF5b3V0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Student/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3R1ZGVudFxEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Teacher/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVhY2hlclxEYXNoYm9hcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/Teacher/StudentProgress.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGVhY2hlclxTdHVkZW50UHJvZ3Jlc3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien-master/QuanLyTienDoSinhVien/Pages/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 

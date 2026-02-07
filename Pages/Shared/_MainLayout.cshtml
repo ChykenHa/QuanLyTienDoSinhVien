@@ -1,0 +1,76 @@
+@using System.Security.Claims
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Quản Lý Tiến Độ Sinh Viên</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/theme.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    @{
+        var userName = User.FindFirst("FullName")?.Value ?? User.Identity?.Name ?? "User";
+        var userRole = User.FindFirst(ClaimTypes.Role)?.Value ?? "Guest";
+        var userInitials = string.Join("", userName.Split(' ').Select(n => n.Length > 0 ? n[0].ToString() : ""));
+        if (string.IsNullOrEmpty(userInitials)) userInitials = "U";
+    }
+
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>EduMetrics</h1>
+                    <p>Hệ thống quản lý</p>
+                </div>
+            </div>
+
+            <div class="header-search">
+                <div class="search-box">
+                    <input type="text" placeholder="Tìm kiếm chung..." />
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <div class="notification-icon">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </div>
+
+                <div class="user-profile">
+                    <div class="user-info">
+                        <div class="user-avatar">@userInitials</div>
+                        <div class="user-details">
+                            <p class="user-name">@userName</p>
+                            <p class="user-role">@userRole</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        @RenderSection("Sidebar", required: false)
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

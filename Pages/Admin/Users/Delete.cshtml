@@ -1,0 +1,137 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Admin.Users.DeleteModel
+@{
+    ViewData["Title"] = "Xóa Tài Khoản";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0"><i class="bi bi-trash-fill"></i> Xác Nhận Xóa Tài Khoản</h4>
+                </div>
+                <div class="card-body">
+                    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i> @Model.ErrorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle-fill"></i>
+                        <strong>Cảnh báo!</strong> Bạn đang thực hiện xóa tài khoản. Hành động này không thể hoàn tác.
+                    </div>
+
+                    <h5 class="mb-3">Thông Tin Tài Khoản</h5>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">Tên Đăng Nhập:</dt>
+                        <dd class="col-sm-8"><strong>@Model.User?.Username</strong></dd>
+
+                        <dt class="col-sm-4">Vai Trò:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-@(Model.User?.Role.Name == "Admin" ? "danger" : Model.User?.Role.Name == "Lecturer" || Model.User?.Role.Name == "Teacher" ? "info" : "success")">
+                                @Model.User?.Role.Name
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">Trạng Thái:</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.User?.IsActive == true)
+                            {
+                                <span class="badge bg-success">Hoạt động</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-danger">Khóa</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4">Ngày Tạo:</dt>
+                        <dd class="col-sm-8">@Model.User?.CreatedAt?.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                        <dt class="col-sm-4">Đăng Nhập Cuối:</dt>
+                        <dd class="col-sm-8">@(Model.User?.LastLogin?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa đăng nhập")</dd>
+                    </dl>
+
+                    @if (Model.User?.Role.Name == "Student" && Model.StudentInfo != null)
+                    {
+                        <hr />
+                        <h5 class="mb-3">Thông Tin Sinh Viên</h5>
+                        <dl class="row">
+                            <dt class="col-sm-4">Mã Sinh Viên:</dt>
+                            <dd class="col-sm-8">@Model.StudentInfo.StudentCode</dd>
+
+                            <dt class="col-sm-4">Họ và Tên:</dt>
+                            <dd class="col-sm-8">@Model.StudentInfo.FullName</dd>
+
+                            <dt class="col-sm-4">Email:</dt>
+                            <dd class="col-sm-8">@(Model.StudentInfo.Email ?? "Chưa có")</dd>
+
+                            <dt class="col-sm-4">Số Điện Thoại:</dt>
+                            <dd class="col-sm-8">@(Model.StudentInfo.Phone ?? "Chưa có")</dd>
+                        </dl>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Lưu ý:</strong> Xóa tài khoản sinh viên sẽ xóa tất cả dữ liệu liên quan bao gồm:
+                            <ul class="mb-0 mt-2">
+                                <li>Thông tin sinh viên</li>
+                                <li>Kế hoạch học tập</li>
+                                <li>Tiến độ học tập</li>
+                                <li>Đăng ký môn học</li>
+                                <li>Vi phạm (nếu có)</li>
+                            </ul>
+                        </div>
+                    }
+
+                    @if ((Model.User?.Role.Name == "Lecturer" || Model.User?.Role.Name == "Teacher") && Model.LecturerInfo != null)
+                    {
+                        <hr />
+                        <h5 class="mb-3">Thông Tin Giảng Viên</h5>
+                        <dl class="row">
+                            <dt class="col-sm-4">Họ và Tên:</dt>
+                            <dd class="col-sm-8">@Model.LecturerInfo.FullName</dd>
+
+                            <dt class="col-sm-4">Email:</dt>
+                            <dd class="col-sm-8">@(Model.LecturerInfo.Email ?? "Chưa có")</dd>
+
+                            <dt class="col-sm-4">Số Điện Thoại:</dt>
+                            <dd class="col-sm-8">@(Model.LecturerInfo.Phone ?? "Chưa có")</dd>
+                        </dl>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i>
+                            <strong>Lưu ý:</strong> Xóa tài khoản giảng viên sẽ xóa tất cả dữ liệu liên quan bao gồm:
+                            <ul class="mb-0 mt-2">
+                                <li>Thông tin giảng viên</li>
+                                <li>Phân công giảng dạy</li>
+                                <li>Đánh giá kế hoạch học tập</li>
+                            </ul>
+                        </div>
+                    }
+
+                    <form method="post" class="mt-4">
+                        <input type="hidden" asp-for="UserId" />
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a href="/Admin/Users/Index" class="btn btn-secondary">
+                                <i class="bi bi-x-circle"></i> Hủy
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="bi bi-trash-fill"></i> Xác Nhận Xóa
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+}
