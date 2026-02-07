@@ -1,0 +1,87 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Teacher.DashboardModel
+
+@{
+    ViewData["Title"] = "Quản lý Sinh viên";
+}
+
+<link rel="stylesheet" href="~/css/rate.css" />
+
+<div class="dashboard-container">
+    <aside class="sidebar">
+        <h2>🎓 Quản lý sinh viên</h2>
+        <div class="nav-item" Theo dõi tiến độ</div>
+        <div class="nav-item active">Phê duyệt & góp ý</div>
+        </aside>
+
+    <main class="main-content">
+        <section class="student-list">
+            <h3>Sinh viên chờ duyệt (@Model.StudentsWaiting.Count)</h3>
+            
+            @foreach (var sv in Model.StudentsWaiting)
+            {
+                <a asp-action="Details" asp-route-id="@sv.Id" style="text-decoration: none; color: inherit;">
+                    <div class="student-card @(sv.Id == Model.CurrentStudent?.Id ? "selected" : "")">
+                        <span class="status-badge">@sv.Status</span>
+                        <strong>@sv.FullName</strong><br/>
+                        <small>MSSV: @sv.StudentCode</small>
+                        <p class="truncate-text">@sv.ProjectTitle</p>
+                        <small class="text-muted">🕒 @sv.TimeAgo</small>
+                    </div>
+                </a>
+            }
+        </section>
+
+        <section class="student-detail">
+            @if (Model.CurrentStudent != null)
+            {
+                <div class="detail-header" style="background: #e3f2fd; padding: 20px; border-radius: 12px; margin-bottom: 20px;">
+                    <span class="status-badge">@Model.CurrentStudent.Status</span>
+                    <h2>@Model.CurrentStudent.FullName</h2>
+                    <p>MSSV: @Model.CurrentStudent.StudentCode • @Model.CurrentStudent.Semester</p>
+                    <h4>@Model.CurrentStudent.ProjectTitle</h4>
+                    
+                    <div class="progress-container">
+                        <div class="progress-bar" style="height: 8px; background: #ccc; border-radius: 4px;">
+                            <div style="width: @Model.CurrentStudent.Progress%; height: 100%; background: #2c3e50; border-radius: 4px;"></div>
+                        </div>
+                        <small>Tiến độ: @Model.CurrentStudent.ProgressSteps/3</small>
+                    </div>
+                </div>
+
+                <div class="roadmap">
+                    <h3>📋 Chi tiết lộ trình học tập</h3>
+                    @foreach (var step in Model.CurrentStudent.Steps)
+                    {
+                        <div class="step-item">
+                            <div class="step-check @(step.IsCompleted ? "completed" : "")"></div>
+                            <div>
+                                <strong>@step.StepName</strong>
+                                <p class="text-muted">@step.Description</p>
+                                <small>📅 @step.Deadline.ToString("dd/MM/yyyy")</small>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <form asp-action="Approve" method="post" class="comment-box">
+                    <input type="hidden" name="StudentId" value="@Model.CurrentStudent.Id" />
+                    
+                    <h3>💬 Góp ý và nhận xét mới</h3>
+                    <textarea name="Comment" rows="5" placeholder="Nhập góp ý, nhận xét cho sinh viên..."></textarea>
+                    
+                    <div class="action-buttons">
+                        <button type="submit" name="action" value="approve" class="btn-approve">Phê duyệt lộ trình</button>
+                        <button type="submit" name="action" value="request_edit" class="btn-edit">Yêu cầu chỉnh sửa</button>
+                    </div>
+                </form>
+            }
+            else
+            {
+                <div class="empty-state" style="text-align: center; padding-top: 100px; color: #999;">
+                    <p>Vui lòng chọn một sinh viên để xem chi tiết và phê duyệt.</p>
+                </div>
+            }
+        </section>
+    </main>
+</div>
