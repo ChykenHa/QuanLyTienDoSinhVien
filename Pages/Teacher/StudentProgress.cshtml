@@ -1,0 +1,137 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Teacher.StudentProgressModel
+@{
+    ViewData["Title"] = "Dashboard - Sinh viên";
+    Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/student-progress.css" />
+}
+
+@section Sidebar {
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a href="/Student/Dashboard" class="menu-link active">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-text">Menu</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Profile" class="menu-link">
+                <i class="fas fa-user menu-icon"></i>
+                <span class="menu-text">Xem danh sách sinh viên</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Teacher/StudentProgress" class="menu-link">
+                <i class="fas fa-book menu-icon"></i>
+                <span class="menu-text">Theo dõi tiến độ sinh viên</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Progress" class="menu-link">
+                <i class="fas fa-chart-line menu-icon"></i>
+                <span class="menu-text">Tiến độ học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Schedule" class="menu-link">
+                <i class="fas fa-calendar menu-icon"></i>
+                <span class="menu-text">Phê duyệt và góp ý lộ trình học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Auth/Logout" class="menu-link">
+                <i class="fas fa-sign-out-alt menu-icon"></i>
+                <span class="menu-text">Đăng xuất</span>
+            </a>
+        </li>
+    </ul>
+}
+
+<div class="progress-header">
+    <div>
+            <h2>Theo dõi tiến độ sinh viên</h2>
+            <span class="update-time">Cập nhật lần cuối: 08:36:44</span>
+    </div>
+        <span class="realtime-badge">● Real-time updated</span>
+</div>
+
+<div class="progress-page">
+
+    <div class="filter-row">
+            <input type="text" placeholder="Tìm tên hoặc MSSV..." />
+            <select><option>Tất cả lớp</option></select>
+            <select><option>Tất cả ngành</option></select>
+            <select><option>Tất cả</option></select>
+    </div>
+
+    <div class="stat-row">
+        <div class="stat-card">
+                <h3>6</h3>
+                <p>Tổng sinh viên</p>
+        </div>
+
+        <div class="stat-card green">
+            <h3>4</h3>
+            <p>Bình thường</p>
+        </div>
+
+        <div class="stat-card yellow">
+            <h3>1</h3>
+            <p>Cảnh báo</p>
+        </div>
+
+        <div class="stat-card red">
+            <h3>1</h3>
+            <p>Nguy cơ</p>
+        </div>        
+    </div>
+
+    <div class="student-card">
+        <div class="student-header">
+            <div class="avatar">N</div>
+            <div>
+                <h4>Nguyễn Văn An <span class="status normal">Bình thường</span></h4>
+                <p>MSSV: 20210001 • KTPM2021-01 • Kỹ thuật phần mềm</p>
+            </div>
+            <div class="gpa">
+                    <span>GPA</span>
+                    <strong>3.5</strong>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <span>Tiến độ chung</span>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:85%"></div>
+            </div>
+            <span class="percent">85%</span>
+        </div>
+
+        <div class="course-list">
+            <div class="course completed">
+                <strong>Lập trình Web</strong>
+                <span>3 TC</span>
+                <span class="score">8.5</span>
+            </div>
+            <div class="course completed">
+                <strong>Cơ sở dữ liệu</strong>
+                <span>3 TC</span>
+                <span class="score">9.0</span>
+            </div>
+
+            <div class="course studying">
+                <strong>Cấu trúc dữ liệu</strong>
+                <span>4 TC</span>
+                <span class="score">7.5</span>
+            </div>
+
+            <div class="course studying">
+                <strong>Mạng máy tính</strong>
+                <span>3 TC</span>
+            </div>
+            </div>
+    </div>
+</div>
