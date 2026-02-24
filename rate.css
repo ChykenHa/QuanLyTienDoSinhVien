@@ -1,0 +1,291 @@
+/* ===== Teacher Dashboard Styles ===== */
+
+.page-header {
+    margin-bottom: 30px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--dark-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.page-header h2 i {
+    color: var(--accent-color);
+}
+
+.page-header .text-muted {
+    color: var(--text-light);
+    margin-top: 5px;
+}
+
+/* Layout: 2-column */
+.teacher-dashboard {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+/* Student List Panel */
+.student-list-panel {
+    position: sticky;
+    top: 100px;
+    max-height: calc(100vh - 130px);
+    overflow-y: auto;
+}
+
+.student-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 10px 10px;
+}
+
+.student-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.student-card {
+    padding: 14px 16px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background: var(--light-bg);
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.student-card:hover {
+    border-color: var(--accent-color);
+    background: rgba(136, 189, 242, 0.08);
+    transform: translateX(4px);
+}
+
+.student-card.selected {
+    border-color: var(--accent-color);
+    background: rgba(136, 189, 242, 0.15);
+    box-shadow: 0 2px 8px rgba(136, 189, 242, 0.2);
+}
+
+.student-card-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+}
+
+.student-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.student-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.student-info strong {
+    font-size: 14px;
+    color: var(--text-dark);
+}
+
+.student-info small {
+    font-size: 12px;
+    color: var(--text-light);
+}
+
+.student-card-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.student-card-bottom .badge i {
+    margin-right: 4px;
+}
+
+/* Empty list */
+.empty-list {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-light);
+}
+
+.empty-list i {
+    font-size: 48px;
+    color: var(--success);
+    margin-bottom: 12px;
+}
+
+/* Plan Info Grid */
+.plan-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    padding: 10px 0;
+}
+
+.plan-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.plan-info-item .label {
+    font-size: 12px;
+    color: var(--text-light);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.plan-info-item .label i {
+    margin-right: 5px;
+    color: var(--accent-color);
+}
+
+.plan-info-item .value {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-dark);
+}
+
+/* Review History */
+.review-item {
+    padding: 14px;
+    border-radius: 8px;
+    background: var(--light-bg);
+    margin-bottom: 10px;
+    border-left: 3px solid var(--accent-color);
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.review-header i {
+    margin-right: 6px;
+    color: var(--primary-color);
+}
+
+.review-comment {
+    margin: 0;
+    color: var(--text-dark);
+    line-height: 1.5;
+    font-size: 14px;
+}
+
+/* Comment Form */
+.comment-textarea {
+    border: 2px solid #E9ECEF;
+    border-radius: 10px;
+    padding: 14px;
+    font-size: 14px;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+}
+
+.comment-textarea:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(136, 189, 242, 0.15);
+    outline: none;
+}
+
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.btn-approve {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #28A745, #20c997);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-approve:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(40, 167, 69, 0.35);
+}
+
+.btn-reject {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #FFC107, #FF9800);
+    color: white;
+    transition: all 0.3s ease;
+}
+
+.btn-reject:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(255, 193, 7, 0.35);
+}
+
+/* Empty Detail State */
+.empty-detail {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text-light);
+}
+
+.empty-state i {
+    font-size: 56px;
+    color: var(--accent-color);
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+.empty-state h4 {
+    margin-bottom: 8px;
+    color: var(--text-dark);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .teacher-dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .student-list-panel {
+        position: static;
+        max-height: 300px;
+    }
+}
