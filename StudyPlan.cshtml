@@ -1,0 +1,288 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Student.StudyPlanModel
+@{
+    ViewData["Title"] = "Study Plan";
+    Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+
+@section Sidebar {
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a href="/Student/Dashboard" class="menu-link">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-text">Menu</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Profile" class="menu-link">
+                <i class="fas fa-user menu-icon"></i>
+                <span class="menu-text">Sinh viên</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/StudyPlan" class="menu-link active">
+                <i class="fas fa-book menu-icon"></i>
+                <span class="menu-text">Kế hoạch học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Progress" class="menu-link">
+                <i class="fas fa-chart-line menu-icon"></i>
+                <span class="menu-text">Tiến độ học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Schedule" class="menu-link">
+                <i class="fas fa-calendar menu-icon"></i>
+                <span class="menu-text">Lịch trình</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Auth/Logout" class="menu-link">
+                <i class="fas fa-sign-out-alt menu-icon"></i>
+                <span class="menu-text">Đăng xuất</span>
+            </a>
+        </li>
+    </ul>
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/study-plan.css" />
+
+<div class="study-plan-container">
+    <!-- HEADER -->
+    <div class="header-section">
+        <div class="header-info">
+            <h1>Kế Hoạch Học Tập</h1>
+            <p>Quản lý và theo dõi kế hoạch học tập của bạn</p>
+        </div>
+
+        <div class="stat-boxes">
+            <div class="stat-box">
+                <p class="stat-label">Tổng Kế Hoạch</p>
+                <p class="stat-value">@Model.StudyPlans.Count</p>
+            </div>
+            <div class="stat-box">
+                <p class="stat-label">Tín Chỉ Tích Lũy</p>
+                <p class="stat-value">@(Model.StudyPlans.Sum(sp => sp.TotalCredits))</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- CREATE NEW PLAN -->
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h5><i class="fas fa-plus-circle"></i> Tạo Kế Hoạch Học Tập Mới</h5>
+        </div>
+        <div class="card-body-custom">
+            <form method="post" asp-page-handler="">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group-custom">
+                            <label asp-for="SelectedSemesterId">Chọn Kỳ Học</label>
+                            <select asp-for="SelectedSemesterId" class="form-control" required>
+                                <option value="">-- Chọn Kỳ Học --</option>
+                                @foreach (var semester in Model.AvailableSemesters)
+                                {
+                                    <option value="@semester.Id">
+                                        @semester.Name
+                                        @if (semester.StartDate.HasValue)
+                                        {
+                                            <span>(@semester.StartDate?.ToString("dd/MM/yyyy"))</span>
+                                        }
+                                    </option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group-custom">
+                    <label>Chọn Môn Học</label>
+                    <div class="subjects-selection">
+                        @if (Model.AvailableSubjects.Any())
+                        {
+                            @foreach (var subject in Model.AvailableSubjects)
+                            {
+                                <label class="subject-checkbox">
+                                    <input type="checkbox" name="SelectedSubjectIds" value="@subject.Id" />
+                                    <span>
+                                        <strong>@subject.Code</strong> - @subject.Name
+                                        <br />
+                                        <small style="color: #9ca3af;">@subject.Credit tín chỉ</small>
+                                    </span>
+                                </label>
+                            }
+                        }
+                        else
+                        {
+                            <p style="text-align: center; color: #9ca3af; grid-column: 1/-1;">Không có môn học khả dụng</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="submit" class="btn btn-primary-custom">
+                        <i class="fas fa-save"></i> Tạo Kế Hoạch
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- EXISTING PLANS -->
+    <div class="card-custom">
+        <div class="card-header-custom">
+            <h5><i class="fas fa-list"></i> Các Kế Hoạch học tập</h5>
+        </div>
+        <div class="card-body-custom">
+            @if (Model.StudyPlans.Any())
+            {
+                @foreach (var plan in Model.StudyPlans)
+                {
+                    <div class="study-plan-item">
+                        <div class="study-plan-header">
+                            <h6 class="study-plan-title">
+                                Kế Hoạch #@plan.Id
+                            </h6>
+                            <span class="status-badge @(plan.Status switch {
+                                "Chưa gửi" => "status-pending",
+                                "Chờ duyệt" => "status-pending",
+                                "Được duyệt" => "status-approved",
+                                "Hoàn thành" => "status-completed",
+                                _ => "status-pending"
+                            })">
+                                @plan.Status
+                            </span>
+                        </div>
+
+                        <div class="study-plan-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-book" style="color: #3b82f6;"></i>
+                                <span class="stat-item-label">Số Môn Học:</span>
+                                <span class="stat-item-value">@plan.SubjectCount</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-graduation-cap" style="color: #10b981;"></i>
+                                <span class="stat-item-label">Tín Chỉ:</span>
+                                <span class="stat-item-value">@plan.TotalCredits</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar" style="color: #f59e0b;"></i>
+                                <span class="stat-item-label">Ngày Tạo:</span>
+                                <span class="stat-item-value">@plan.CreatedAt?.ToString("dd/MM/yyyy")</span>
+                            </div>
+                        </div>
+
+                        <!-- SUBJECTS IN THIS PLAN -->
+                        @if (plan.Details.Any())
+                        {
+                            <table class="subject-table">
+                                <thead>
+                                    <tr>
+                                        <th>Mã Môn</th>
+                                        <th>Tên Môn Học</th>
+                                        <th>Tín Chỉ</th>
+                                        <th>Kỳ Học</th>
+                                        <th style="text-align: center;">Hành Động</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var detail in plan.Details)
+                                    {
+                                        <tr>
+                                            <td><strong>@detail.SubjectCode</strong></td>
+                                            <td>@detail.SubjectName</td>
+                                            <td>
+                                                <span style="background-color: #e0e7ff; color: #4f46e5; padding: 4px 8px; border-radius: 6px; font-weight: 600;">
+                                                    @detail.Credit
+                                                </span>
+                                            </td>
+                                            <td>@detail.SemesterName</td>
+                                            <td style="text-align: center;">
+                                                @if (plan.Status == "Chưa gửi")
+                                                {
+                                                    <form method="post" asp-page-handler="RemoveSubject" style="display:inline;">
+                                                        <input type="hidden" name="detailId" value="@detail.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-danger-custom" onclick="return confirm('Bạn chắc chắn muốn xóa môn này?')">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <span style="color: #9ca3af;">-</span>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <div style="background-color: #f9fafb; padding: 16px; border-radius: 8px; text-align: center; color: #9ca3af;">
+                                <p style="margin: 0;">Kế hoạch này chưa có môn học nào</p>
+                            </div>
+                        }
+
+                        <!-- REVIEWS -->
+                        @if (plan.Reviews.Any())
+                        {
+                            <div class="review-section">
+                                <h6 style="margin-bottom: 12px; font-weight: 600; color: #1f2937;">
+                                    <i class="fas fa-comment-dots" style="color: #3b82f6; margin-right: 8px;"></i>
+                                    Nhận Xét Từ Cố Vấn
+                                </h6>
+                                @foreach (var review in plan.Reviews)
+                                {
+                                    <div class="review-item">
+                                        <div>
+                                            <span class="review-lecturer">@review.LecturerName</span>
+                                            <span class="review-date">@review.ReviewedAt?.ToString("dd/MM/yyyy HH:mm")</span>
+                                        </div>
+                                        @if (!string.IsNullOrEmpty(review.Comment))
+                                        {
+                                            <div class="review-comment">@review.Comment</div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        }
+
+                        <!-- ACTION BUTTONS -->
+                        <div class="action-buttons">
+                            @if (plan.Status == "Chưa gửi")
+                            {
+                                <form method="post" asp-page-handler="Submit" style="display:inline;">
+                                    <input type="hidden" name="id" value="@plan.Id" />
+                                    <button type="submit" class="btn btn-success-custom">
+                                        <i class="fas fa-paper-plane"></i> Gửi Duyệt
+                                    </button>
+                                </form>
+
+                                <form method="post" asp-page-handler="Delete" style="display:inline;">
+                                    <input type="hidden" name="id" value="@plan.Id" />
+                                    <button type="submit" class="btn btn-danger-custom" onclick="return confirm('Bạn chắc chắn muốn xóa kế hoạch này? Hành động này không thể hoàn tác.')">
+                                        <i class="fas fa-trash"></i> Xóa Kế Hoạch
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <div class="empty-state-icon">
+                        <i class="fas fa-inbox"></i>
+                    </div>
+                    <p class="empty-state-text">Chưa có kế hoạch học tập nào</p>
+                    <p style="font-size: 13px;">Hãy tạo một kế hoạch học tập mới để bắt đầu</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>

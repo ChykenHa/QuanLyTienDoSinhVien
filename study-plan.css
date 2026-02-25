@@ -1,0 +1,355 @@
+/* Study Plan Page Styles */
+
+.study-plan-container {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    min-height: 100vh;
+    padding: 40px 20px !important;
+    border-radius: 24px !important;
+    margin: 20px !important;
+}
+
+.header-section {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    margin-bottom: 30px !important;
+    flex-wrap: wrap !important;
+}
+
+.header-info h1 {
+    font-size: 32px !important;
+    font-weight: bold !important;
+    color: #1e293b !important;
+    margin-bottom: 8px !important;
+}
+
+.header-info p {
+    color: #6b7280 !important;
+    margin: 0 !important;
+}
+
+.stat-boxes {
+    display: flex !important;
+    gap: 20px !important;
+    flex-wrap: wrap !important;
+}
+
+.stat-box {
+    background-color: #fff !important;
+    padding: 20px !important;
+    border-radius: 16px !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+    flex: 1 1 auto !important;
+    min-width: 140px !important;
+    max-width: 200px !important;
+    text-align: center !important;
+}
+
+.stat-label {
+    font-size: 11px !important;
+    color: #9ca3af !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+    margin-bottom: 8px !important;
+}
+
+.stat-value {
+    font-size: 28px !important;
+    font-weight: bold !important;
+    color: #2563eb !important;
+}
+
+.card-custom {
+    border-radius: 20px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    border: none !important;
+    margin-bottom: 24px !important;
+    background-color: #fff !important;
+}
+
+.card-header-custom {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+    border-radius: 20px 20px 0 0 !important;
+    color: white !important;
+    padding: 24px !important;
+    border: none !important;
+}
+
+.card-header-custom h5 {
+    font-weight: bold !important;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+}
+
+.card-body-custom {
+    padding: 24px !important;
+}
+
+.form-group-custom {
+    margin-bottom: 16px !important;
+}
+
+.form-group-custom label {
+    font-weight: 500 !important;
+    color: #374151 !important;
+    margin-bottom: 8px !important;
+    display: block !important;
+    font-size: 14px !important;
+}
+
+.form-group-custom select,
+.form-group-custom input {
+    border-radius: 12px !important;
+    border: 1px solid #d1d5db !important;
+    padding: 10px 12px !important;
+    font-size: 14px !important;
+}
+
+.form-group-custom select:focus,
+.form-group-custom input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+.subjects-selection {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)) !important;
+    gap: 12px !important;
+    margin-bottom: 20px !important;
+    max-height: 300px !important;
+    overflow-y: auto !important;
+    padding: 12px !important;
+    background-color: #f9fafb !important;
+    border-radius: 12px !important;
+}
+
+.subject-checkbox {
+    display: flex !important;
+    align-items: center !important;
+    padding: 10px !important;
+    background-color: white !important;
+    border: 1px solid #e5e7eb !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    transition: all 0.2s !important;
+}
+
+.subject-checkbox:hover {
+    background-color: #f0f4ff !important;
+    border-color: #3b82f6 !important;
+}
+
+.subject-checkbox input[type="checkbox"] {
+    margin-right: 8px !important;
+    cursor: pointer !important;
+}
+
+.btn-custom {
+    border-radius: 12px !important;
+    font-weight: 600 !important;
+    padding: 10px 20px !important;
+    transition: all 0.2s !important;
+}
+
+.btn-primary-custom {
+    background-color: #3b82f6 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-primary-custom:hover {
+    background-color: #2563eb !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4) !important;
+}
+
+.btn-danger-custom {
+    background-color: #ef4444 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-danger-custom:hover {
+    background-color: #dc2626 !important;
+}
+
+.btn-success-custom {
+    background-color: #10b981 !important;
+    color: white !important;
+    border: none !important;
+}
+
+.btn-success-custom:hover {
+    background-color: #059669 !important;
+}
+
+.study-plan-item {
+    border: 1px solid #e5e7eb !important;
+    border-radius: 16px !important;
+    padding: 20px !important;
+    margin-bottom: 20px !important;
+    background-color: #fff !important;
+    transition: all 0.3s !important;
+}
+
+.study-plan-item:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+    border-color: #3b82f6 !important;
+}
+
+.study-plan-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    margin-bottom: 16px !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+}
+
+.study-plan-title {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #1f2937 !important;
+    margin: 0 !important;
+}
+
+.status-badge {
+    display: inline-block !important;
+    padding: 6px 12px !important;
+    border-radius: 20px !important;
+    font-size: 12px !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+}
+
+.status-pending {
+    background-color: #fef3c7 !important;
+    color: #92400e !important;
+}
+
+.status-approved {
+    background-color: #d1fae5 !important;
+    color: #065f46 !important;
+}
+
+.status-completed {
+    background-color: #d1e7f5 !important;
+    color: #164e63 !important;
+}
+
+.study-plan-stats {
+    display: flex !important;
+    gap: 20px !important;
+    margin-bottom: 16px !important;
+    flex-wrap: wrap !important;
+}
+
+.stat-item {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.stat-item-label {
+    color: #9ca3af !important;
+    font-size: 13px !important;
+}
+
+.stat-item-value {
+    font-weight: bold !important;
+    color: #3b82f6 !important;
+    font-size: 16px !important;
+}
+
+.subject-table {
+    width: 100% !important;
+    margin-top: 16px !important;
+    border-collapse: collapse !important;
+}
+
+.subject-table thead {
+    background-color: #f3f4f6 !important;
+}
+
+.subject-table th {
+    padding: 12px !important;
+    text-align: left !important;
+    font-weight: 600 !important;
+    color: #374151 !important;
+    font-size: 13px !important;
+    border-bottom: 2px solid #e5e7eb !important;
+}
+
+.subject-table td {
+    padding: 12px !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    font-size: 14px !important;
+}
+
+.subject-table tr:hover {
+    background-color: #f9fafb !important;
+}
+
+.review-section {
+    background-color: #f9fafb !important;
+    border-radius: 12px !important;
+    padding: 16px !important;
+    margin-top: 16px !important;
+}
+
+.review-item {
+    background-color: white !important;
+    border-left: 4px solid #3b82f6 !important;
+    padding: 12px !important;
+    margin-bottom: 8px !important;
+    border-radius: 8px !important;
+}
+
+.review-lecturer {
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+}
+
+.review-date {
+    font-size: 12px !important;
+    color: #9ca3af !important;
+    margin-left: 8px !important;
+}
+
+.review-comment {
+    margin-top: 8px !important;
+    color: #6b7280 !important;
+    font-size: 13px !important;
+}
+
+.action-buttons {
+    display: flex !important;
+    gap: 8px !important;
+    margin-top: 12px !important;
+    flex-wrap: wrap !important;
+}
+
+.action-buttons .btn {
+    font-size: 13px !important;
+    padding: 6px 12px !important;
+}
+
+.empty-state {
+    text-align: center !important;
+    padding: 40px 20px !important;
+    color: #9ca3af !important;
+}
+
+.empty-state-icon {
+    font-size: 48px !important;
+    color: #d1d5db !important;
+    margin-bottom: 16px !important;
+}
+
+.empty-state-text {
+    font-size: 16px !important;
+    margin-bottom: 8px !important;
+}
