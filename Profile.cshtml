@@ -1,0 +1,351 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Student.ProfileModel
+@{
+    ViewData["Title"] = "Profile Page";
+    Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+<meta charset="UTF-8" />
+
+
+@section Sidebar {
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a href="/Student/Dashboard" class="menu-link active">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-text">Menu</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Profile" class="menu-link">
+                <i class="fas fa-user menu-icon"></i>
+                <span class="menu-text">Sinh viên</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/StudyPlan" class="menu-link">
+                <i class="fas fa-book menu-icon"></i>
+                <span class="menu-text">Kế hoạch học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Progress" class="menu-link">
+                <i class="fas fa-chart-line menu-icon"></i>
+                <span class="menu-text">Tiến độ học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Schedule" class="menu-link">
+                <i class="fas fa-calendar menu-icon"></i>
+                <span class="menu-text">Lịch trình</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Auth/Logout" class="menu-link">
+                <i class="fas fa-sign-out-alt menu-icon"></i>
+                <span class="menu-text">Đăng xuất</span>
+            </a>
+        </li>
+    </ul>
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="~/css/profile.css" />
+
+<div class="profile-container">
+
+    <!-- HEADER -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-start mb-5">
+        <div>
+            <h1 class="display-5 fw-bold" style="color: #1e293b;">Student Profile</h1>
+            <p class="text-secondary mt-2">Manage academic profile and settings.</p>
+        </div>
+
+        <div class="d-flex gap-3 flex-wrap">
+            <!-- Attendance -->
+            <div class="stat-box">
+                <p class="stat-label">ATTENDANCE</p>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="stat-value">@Model.AttendanceRate%</span>
+                </div>
+            </div>
+
+            <!-- GPA -->
+            <div class="stat-box">
+                <p class="stat-label">CURRENT GPA</p>
+                <div class="d-flex align-items-end gap-2">
+                    <span class="stat-value gpa-value">
+                        @Model.GPA.ToString("F2")
+                    </span>
+                    <span style="color: #9ca3af; font-size: 14px;">/ 4.0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CARD -->
+    <div class="profile-card bg-white p-5">
+        <div class="row">
+            <!-- LEFT COLUMN -->
+            <div class="profile-left-col">
+
+                <div class="avatar-container">
+                    <img src="https://thumbs.dreamstime.com/b/student-icon-vector-graduation-mortar-board-school-college-university-glyph-pictogram-male-person-profile-avatar-108392101.jpg?w=768"
+                         class="avatar-img" />
+                    <span class="online-indicator"></span>
+                </div>
+
+                <h2 class="student-name">@Model.FullName</h2>
+
+                <span class="student-id">
+                    ID: @Model.StudentCode
+                </span>
+
+                <button class="btn btn-edit" onclick="openEditModal()">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+
+                <button class="btn btn-share" onclick="openShareModal()">
+                    <i class="fas fa-share-alt"></i> Share Profile
+                </button>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div class="profile-right-col">
+
+                <!-- PERSONAL -->
+                <div class="mb-5">
+                    <div class="section-header">
+                        <span class="section-icon personal"><i class="fas fa-user"></i></span>
+                        <h3 class="section-title">PERSONAL INFORMATION</h3>
+                    </div>
+
+                    <div class="profile-info-row">
+                        <div class="profile-info-item">
+                            <p class="field-label">EMAIL ADDRESS</p>
+                            <p class="field-value">@Model.Email</p>
+                        </div>
+
+                        <div class="profile-info-item">
+                            <p class="field-label">PHONE NUMBER</p>
+                            <p class="field-value">@Model.Phone</p>
+                        </div>
+
+                        <div class="profile-info-item full-width">
+                            <p class="field-label">RESIDENTIAL ADDRESS</p>
+                            <p class="field-value">@Model.Address</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACADEMIC -->
+                <div>
+                    <div class="section-header">
+                        <span class="section-icon academic"><i class="fas fa-graduation-cap"></i></span>
+                        <h3 class="section-title">ACADEMIC DETAILS</h3>
+                    </div>
+
+                    <div class="profile-info-row">
+                        <div class="profile-info-item">
+                            <p class="field-label">CLASS ID / NAME</p>
+                            <p class="field-value">@Model.Class</p>
+                        </div>
+
+                        <div class="profile-info-item">
+                            <p class="field-label">MAJOR</p>
+                            <p class="field-value">@Model.MajorName</p>
+                        </div>
+
+                        <div class="profile-info-item">
+                            <p class="field-label">ACADEMIC YEAR</p>
+                            <p class="field-value">@Model.AcademicYear</p>
+                        </div>
+
+                        <div class="profile-info-item d-flex align-items-center gap-3">
+                            <p class="field-label mb-0">PROFILE VISIBILITY</p>
+                            <input type="checkbox" class="form-check-input"
+                                   @(Model.IsPrivate== true ? "" : "checked") />
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Edit Profile Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileLabel"><i class="fas fa-edit"></i> Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" asp-page-handler="EditProfile">
+                <div class="modal-body">
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <h6 style="color: #4b5563; font-weight: 600; margin-bottom: 16px;"><i class="fas fa-user"></i> Personal Information</h6>
+
+                    <div class="mb-3">
+                        <label for="editFullName" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="editFullName" name="editFullName" value="@Model.EditFullName" placeholder="Enter your full name" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email Address</label>
+                        <input type="email" class="form-control" id="editEmail" name="editEmail" value="@Model.EditEmail" placeholder="Enter your email" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editPhone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="editPhone" name="editPhone" value="@Model.EditPhone" placeholder="Enter your phone number" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editAddress" class="form-label">Residential Address</label>
+                        <textarea class="form-control" id="editAddress" name="editAddress" rows="2" placeholder="Enter your address">@Model.EditAddress</textarea>
+                    </div>
+
+                    <h6 style="color: #4b5563; font-weight: 600; margin-bottom: 16px; margin-top: 24px;"><i class="fas fa-lock"></i> Privacy Settings</h6>
+
+                    <div class="form-check form-switch mb-3">
+                        <input class="form-check-input" type="checkbox" id="editIsPrivate" name="editIsPrivate" @(Model.EditIsPrivate == true ? "checked" : "") />
+                        <label class="form-check-label" for="editIsPrivate">Make my profile private</label>
+                    </div>
+
+                    <h6 style="color: #4b5563; font-weight: 600; margin-bottom: 16px; margin-top: 24px;"><i class="fas fa-book"></i> Academic Information (Read-only)</h6>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Student Code</label>
+                            <input type="text" class="form-control" value="@Model.StudentCode" disabled />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Class</label>
+                            <input type="text" class="form-control" value="@Model.Class?.Name" disabled />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Major</label>
+                            <input type="text" class="form-control" value="@Model.MajorName" disabled />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Academic Year</label>
+                            <input type="text" class="form-control" value="@Model.AcademicYear" disabled />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Share Profile Modal -->
+<div class="modal fade" id="shareProfileModal" tabindex="-1" aria-labelledby="shareProfileLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="shareProfileLabel"><i class="fas fa-share-alt"></i> Share Your Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-4">
+                    <h6 style="color: #4b5563; font-weight: 600; margin-bottom: 12px;">Profile Link</h6>
+                    <p style="color: #94a3b8; font-size: 12px; margin-bottom: 8px;">Share this link with others to let them view your profile:</p>
+                    
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="shareLink" value="@Model.ShareProfileLink" readonly />
+                    <button class="btn btn-primary" type="button" onclick="copyToClipboard()" style="background-color: #3b82f6; border-color: #3b82f6;"><i class="fas fa-copy"></i> Copy Link</button>
+                    </div>
+                    <small id="copyFeedback" style="color: #10b981; display: none; margin-top: 8px;"><i class="fas fa-check"></i> Link copied to clipboard!</small>
+                </div>
+
+                <div class="mb-3">
+                    <h6 style="color: #4b5563; font-weight: 600; margin-bottom: 12px;">Share Information</h6>
+                    <p style="color: #94a3b8; font-size: 12px; margin-bottom: 12px;">Your shared profile includes:</p>
+                    <div style="background-color: #f8fafc; padding: 12px; border-radius: 8px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><input type="checkbox" checked disabled /><span style="color: #475569;">Full Name</span></div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><input type="checkbox" checked disabled /><span style="color: #475569;">Student Code</span></div>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;"><input type="checkbox" checked disabled /><span style="color: #475569;">Major & Class</span></div>
+                        <div style="display: flex; align-items: center; gap: 8px;"><input type="checkbox" checked disabled /><span style="color: #475569;">GPA</span></div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info" role="alert" style="margin-top: 16px;">
+                    <small><strong>Note:</strong> This link shares your public profile information. If you want to keep your profile private, toggle the privacy setting in Edit Profile.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openEditModal() {
+        const modal = new bootstrap.Modal(document.getElementById('editProfileModal'), {});
+        modal.show();
+    }
+
+    function openShareModal() {
+        const modal = new bootstrap.Modal(document.getElementById('shareProfileModal'), {});
+        modal.show();
+    }
+
+    function copyToClipboard() {
+        const shareLink = document.getElementById('shareLink');
+        const feedback = document.getElementById('copyFeedback');
+        
+        shareLink.select();
+        shareLink.setSelectionRange(0, 99999);
+        
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(shareLink.value).then(() => {
+                feedback.style.display = 'block';
+                setTimeout(() => { feedback.style.display = 'none'; }, 2000);
+            }).catch(err => {
+                document.execCommand('copy');
+                feedback.style.display = 'block';
+                setTimeout(() => { feedback.style.display = 'none'; }, 2000);
+            });
+        } else {
+            document.execCommand('copy');
+            feedback.style.display = 'block';
+            setTimeout(() => { feedback.style.display = 'none'; }, 2000);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const alerts = document.querySelectorAll('.alert-dismissible');
+        alerts.forEach(alert => {
+            setTimeout(() => {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            }, 4000);
+        });
+    });
+</script>

@@ -1,0 +1,239 @@
+/* ===== ROOT ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.profile-container {
+    padding: 24px;
+    background: #f8fafc;
+    min-height: 100vh;
+    font-family: "Inter", system-ui, sans-serif;
+}
+
+/* ===== STAT BOX ===== */
+.stat-box {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 12px;
+    min-width: 140px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: 0.05em;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.gpa-value {
+    color: #3b82f6;
+}
+
+/* ===== PROFILE CARD ===== */
+.profile-card {
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e2e8f0;
+}
+
+.profile-card .row {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 32px;
+    align-items: start;
+}
+
+/* ===== LEFT COLUMN ===== */
+.profile-left-col {
+    text-align: center;
+    border-right: 1px solid #e2e8f0;
+    padding-right: 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar-container {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.avatar-img {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.online-indicator {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 14px;
+    height: 14px;
+    background: #10b981;
+    border: 3px solid #fff;
+    border-radius: 50%;
+}
+
+.student-name {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px;
+}
+
+.student-id {
+    display: block;
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 24px;
+    font-weight: 500;
+}
+
+.btn-edit,
+.btn-share {
+    width: 100%;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 12px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.btn-edit {
+    background: #3b82f6;
+    color: #fff;
+}
+
+.btn-edit:hover {
+    background: #2563eb;
+}
+
+.btn-share {
+    background: #f5f5f5;
+    color: #1e293b;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-share:hover {
+    background: #e2e8f0;
+}
+
+/* ===== RIGHT COLUMN ===== */
+.profile-right-col {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.section-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #fff;
+}
+
+.section-icon.personal {
+    background: #3b82f6;
+}
+
+.section-icon.academic {
+    background: #8b5cf6;
+}
+
+.section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1e293b;
+    letter-spacing: 0.05em;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.profile-info-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+}
+
+.profile-info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.field-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    letter-spacing: 0.05em;
+    margin: 0 0 8px;
+    text-transform: uppercase;
+}
+
+.field-value {
+    font-size: 15px;
+    font-weight: 500;
+    color: #1e293b;
+    margin: 0;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+    .profile-card .row {
+        grid-template-columns: 1fr;
+        gap: 24px;
+    }
+
+    .profile-left-col {
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+        padding-right: 0;
+        padding-bottom: 24px;
+    }
+
+    .profile-info-row {
+        grid-template-columns: 1fr;
+    }
+
+    .avatar-img {
+        width: 120px;
+        height: 120px;
+    }
+}
