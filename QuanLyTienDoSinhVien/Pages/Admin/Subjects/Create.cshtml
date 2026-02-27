@@ -1,0 +1,48 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Admin.Subjects.CreateModel
+@{
+    ViewData["Title"] = "Thêm Môn Học Mới";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fas fa-plus-circle"></i> Thêm Môn Học Mới</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="Subject.Code" class="form-label">Mã Môn Học</label>
+                    <input asp-for="Subject.Code" class="form-control" placeholder="VD: CS101" />
+                    <span asp-validation-for="Subject.Code" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Subject.Name" class="form-label">Tên Môn Học</label>
+                    <input asp-for="Subject.Name" class="form-control" placeholder="Nhập tên môn học..." />
+                    <span asp-validation-for="Subject.Name" class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Subject.Credit" class="form-label">Số Tín Chỉ</label>
+                    <input asp-for="Subject.Credit" type="number" class="form-control" min="1" max="10" />
+                    <span asp-validation-for="Subject.Credit" class="text-danger"></span>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                    <a asp-page="Index" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Hủy
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

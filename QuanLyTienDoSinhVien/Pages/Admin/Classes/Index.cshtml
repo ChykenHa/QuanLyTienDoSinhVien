@@ -1,17 +1,17 @@
 @page
-@model QuanLyTienDoSinhVien.Pages.Admin.Majors.IndexModel
+@model QuanLyTienDoSinhVien.Pages.Admin.Classes.IndexModel
 @{
-    ViewData["Title"] = "Quản Lý Ngành";
+    ViewData["Title"] = "Quản Lý Lớp";
 }
 
 <div class="container-fluid mt-4">
     <div class="row mb-4">
         <div class="col-md-6">
-            <h2><i class="fas fa-university"></i> Quản Lý Ngành</h2>
+            <h2><i class="fas fa-chalkboard"></i> Quản Lý Lớp</h2>
         </div>
         <div class="col-md-6 text-end">
             <a asp-page="Create" class="btn btn-success">
-                <i class="fas fa-plus"></i> Thêm Ngành Mới
+                <i class="fas fa-plus"></i> Thêm Lớp Mới
             </a>
             <a href="/Admin/Dashboard" class="btn btn-secondary">
                 <i class="fas fa-arrow-left"></i> Quay Lại
@@ -29,36 +29,36 @@
 
     <div class="card">
         <div class="card-header bg-primary text-white">
-            <h5 class="mb-0">Danh Sách Ngành (@Model.Majors.Count)</h5>
+            <h5 class="mb-0">Danh Sách Lớp (@Model.Classes.Count)</h5>
         </div>
         <div class="card-body">
-            @if (Model.Majors.Any())
+            @if (Model.Classes.Any())
             {
                 <div class="table-responsive">
                     <table class="table table-hover table-striped">
                         <thead class="table-dark">
                             <tr>
                                 <th>ID</th>
-                                <th>Tên Ngành</th>
-
-                                <th>Số Lớp</th>
+                                <th>Tên Lớp</th>
+                                <th>Thuộc Ngành</th>
+                                <th>Số Sinh Viên</th>
                                 <th>Thao Tác</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var major in Model.Majors)
+                            @foreach (var cls in Model.Classes)
                             {
                                 <tr>
-                                    <td>@major.Id</td>
-                                    <td><strong>@major.Name</strong></td>
-
-                                    <td><span class="badge bg-info">@major.Classes.Count</span></td>
+                                    <td>@cls.Id</td>
+                                    <td><strong>@cls.Name</strong></td>
+                                    <td><span class="badge bg-secondary">@(cls.Major?.Name ?? "Chưa gán")</span></td>
+                                    <td><span class="badge bg-info">@cls.Students.Count</span></td>
                                     <td>
                                         <div class="btn-group" role="group">
-                                            <a asp-page="Edit" asp-route-id="@major.Id" class="btn btn-sm btn-warning" title="Chỉnh sửa">
+                                            <a asp-page="Edit" asp-route-id="@cls.Id" class="btn btn-sm btn-warning" title="Chỉnh sửa">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <a asp-page="Delete" asp-route-id="@major.Id" class="btn btn-sm btn-danger" title="Xóa">
+                                            <a asp-page="Delete" asp-route-id="@cls.Id" class="btn btn-sm btn-danger" title="Xóa">
                                                 <i class="fas fa-trash"></i>
                                             </a>
                                         </div>
@@ -72,7 +72,7 @@
             else
             {
                 <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i> Chưa có ngành nào. Hãy thêm ngành mới.
+                    <i class="fas fa-info-circle"></i> Chưa có lớp nào. Hãy thêm lớp mới.
                 </div>
             }
         </div>

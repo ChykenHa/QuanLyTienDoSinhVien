@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using QuanLyTienDoSinhVien.Data;
 using QuanLyTienDoSinhVien.Models;
 
-namespace QuanLyTienDoSinhVien.Pages.Admin.Majors;
+namespace QuanLyTienDoSinhVien.Pages.Admin.Classes;
 
 public class IndexModel : PageModel
 {
@@ -14,14 +14,14 @@ public class IndexModel : PageModel
         _context = context;
     }
 
-    public List<Major> Majors { get; set; } = new();
+    public List<Class> Classes { get; set; } = new();
 
     public async Task OnGetAsync()
     {
-        Majors = await _context.Majors
-
-            .Include(m => m.Classes)
-            .OrderBy(m => m.Name)
+        Classes = await _context.Classes
+            .Include(c => c.Major)
+            .Include(c => c.Students)
+            .OrderBy(c => c.Name)
             .ToListAsync();
     }
 }

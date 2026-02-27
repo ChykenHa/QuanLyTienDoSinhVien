@@ -1,0 +1,39 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Admin.Majors.CreateModel
+@{
+    ViewData["Title"] = "Thêm Ngành Mới";
+}
+
+<div class="container-fluid mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2><i class="fas fa-plus-circle"></i> Thêm Ngành Mới</h2>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="mb-3">
+                    <label asp-for="Major.Name" class="form-label">Tên Ngành</label>
+                    <input asp-for="Major.Name" class="form-control" placeholder="Nhập tên ngành..." />
+                    <span asp-validation-for="Major.Name" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-save"></i> Lưu
+                    </button>
+                    <a asp-page="Index" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Hủy
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
