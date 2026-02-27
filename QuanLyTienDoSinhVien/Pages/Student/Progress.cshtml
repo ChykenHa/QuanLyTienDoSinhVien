@@ -1,0 +1,230 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Student.ProgressModel
+@{
+    ViewData["Title"] = "Tiến độ học tập";
+    Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+
+@section Sidebar {
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a href="/Student/Dashboard" class="menu-link">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-text">Menu</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Profile" class="menu-link">
+                <i class="fas fa-user menu-icon"></i>
+                <span class="menu-text">Sinh viên</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/StudyPlan" class="menu-link">
+                <i class="fas fa-book menu-icon"></i>
+                <span class="menu-text">Kế hoạch học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Progress" class="menu-link active">
+                <i class="fas fa-chart-line menu-icon"></i>
+                <span class="menu-text">Tiến độ học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Warnings" class="menu-link">
+                <i class="fas fa-exclamation-triangle menu-icon"></i>
+                <span class="menu-text">Cảnh báo</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Feedback" class="menu-link">
+                <i class="fas fa-comments menu-icon"></i>
+                <span class="menu-text">Phản hồi</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Auth/Logout" class="menu-link">
+                <i class="fas fa-sign-out-alt menu-icon"></i>
+                <span class="menu-text">Đăng xuất</span>
+            </a>
+        </li>
+    </ul>
+}
+
+<div class="page-header">
+    <h2>Tiến độ học tập</h2>
+    <p class="text-muted">Theo dõi kết quả học tập và tiến độ tích lũy tín chỉ.</p>
+</div>
+
+<!-- Summary Stats -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title"><i class="fas fa-star"></i> GPA Tích lũy</span>
+            <div class="stat-icon blue"><i class="fas fa-graduation-cap"></i></div>
+        </div>
+        <div class="stat-value">@Model.GPA.ToString("0.00")</div>
+        <div class="stat-footer">
+            <span class="stat-label">Tính theo tín chỉ</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title"><i class="fas fa-layer-group"></i> Tín chỉ tích lũy</span>
+            <div class="stat-icon green"><i class="fas fa-check-double"></i></div>
+        </div>
+        <div class="stat-value">@Model.TotalCredits</div>
+        <div class="stat-footer">
+            <span class="stat-label">Tổng tín chỉ đã hoàn thành</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title"><i class="fas fa-book-open"></i> Môn học</span>
+            <div class="stat-icon orange"><i class="fas fa-tasks"></i></div>
+        </div>
+        <div class="stat-value">@Model.CompletedSubjects / @Model.TotalSubjects</div>
+        <div class="stat-footer">
+            <span class="stat-label">Hoàn thành / Tổng</span>
+        </div>
+    </div>
+</div>
+
+<!-- GPA Chart -->
+<div class="content-card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-chart-bar"></i> Biểu đồ GPA theo học kỳ</h3>
+    </div>
+    <div style="position: relative; height: 300px;">
+        <canvas id="gpaChart"></canvas>
+    </div>
+</div>
+
+<!-- Transcript by Semester -->
+@foreach (var sem in Model.SemesterProgresses)
+{
+    <div class="content-card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-calendar-alt"></i> @sem.SemesterName</h3>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Mã môn</th>
+                        <th>Tên môn học</th>
+                        <th>Tín chỉ</th>
+                        <th>Tiến độ</th>
+                        <th>Điểm</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var e in sem.Enrollments)
+                    {
+                        <tr>
+                            <td><strong>@e.SubjectCode</strong></td>
+                            <td>@e.SubjectName</td>
+                            <td>@e.Credit</td>
+                            <td>
+                                <div class="progress" style="height: 8px; background: #E9ECEF; border-radius: 4px;">
+                                    <div style="width: @e.CompletionPercent%; height: 100%; background: linear-gradient(90deg, var(--primary-color), var(--accent-color)); border-radius: 4px;"></div>
+                                </div>
+                                <small style="color: var(--text-light);">@e.CompletionPercent%</small>
+                            </td>
+                            <td>
+                                @if (e.Score.HasValue)
+                                {
+                                    <strong style="color: @(e.Score >= 5 ? "var(--success)" : "var(--danger)");">@e.Score.Value.ToString("0.1")</strong>
+                                }
+                                else
+                                {
+                                    <span style="color: var(--text-light);">-</span>
+                                }
+                            </td>
+                            <td>
+                                @if (e.Status == "Completed")
+                                {
+                                    <span class="badge badge-success">Hoàn thành</span>
+                                }
+                                else if (e.Status == "In Progress")
+                                {
+                                    <span class="badge badge-info">Đang học</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-warning">Chưa bắt đầu</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const ctx = document.getElementById('gpaChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Model.ChartLabelsJson),
+                datasets: [
+                    {
+                        label: 'GPA',
+                        data: @Html.Raw(Model.ChartGpaJson),
+                        backgroundColor: 'rgba(136, 189, 242, 0.6)',
+                        borderColor: 'rgba(106, 137, 167, 1)',
+                        borderWidth: 2,
+                        borderRadius: 8,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Tín chỉ tích lũy',
+                        data: @Html.Raw(Model.ChartCreditsJson),
+                        type: 'line',
+                        borderColor: 'rgba(40, 167, 69, 1)',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: 'rgba(40, 167, 69, 1)',
+                        pointRadius: 5,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: { font: { size: 13 }, usePointStyle: true }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 10,
+                        title: { display: true, text: 'GPA', font: { weight: 'bold' } },
+                        grid: { color: 'rgba(0,0,0,0.05)' }
+                    },
+                    y1: {
+                        beginAtZero: true,
+                        position: 'right',
+                        title: { display: true, text: 'Tín chỉ', font: { weight: 'bold' } },
+                        grid: { drawOnChartArea: false }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    </script>
+}

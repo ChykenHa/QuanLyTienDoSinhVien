@@ -1,0 +1,191 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Student.FeedbackModel
+@{
+    ViewData["Title"] = "Phản hồi & Thông báo";
+    Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+
+@section Sidebar {
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a href="/Student/Dashboard" class="menu-link">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-text">Menu</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Profile" class="menu-link">
+                <i class="fas fa-user menu-icon"></i>
+                <span class="menu-text">Sinh viên</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/StudyPlan" class="menu-link">
+                <i class="fas fa-book menu-icon"></i>
+                <span class="menu-text">Kế hoạch học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Progress" class="menu-link">
+                <i class="fas fa-chart-line menu-icon"></i>
+                <span class="menu-text">Tiến độ học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Warnings" class="menu-link">
+                <i class="fas fa-exclamation-triangle menu-icon"></i>
+                <span class="menu-text">Cảnh báo</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Feedback" class="menu-link active">
+                <i class="fas fa-comments menu-icon"></i>
+                <span class="menu-text">Phản hồi</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Auth/Logout" class="menu-link">
+                <i class="fas fa-sign-out-alt menu-icon"></i>
+                <span class="menu-text">Đăng xuất</span>
+            </a>
+        </li>
+    </ul>
+}
+
+<div class="page-header">
+    <h2>Phản hồi & Thông báo</h2>
+    <p class="text-muted">Xem phản hồi giảng viên và thông báo hệ thống.</p>
+</div>
+
+<!-- Tabs -->
+<div class="content-card" style="padding: 0;">
+    <div style="display: flex; border-bottom: 2px solid #E9ECEF;">
+        <a href="/Student/Feedback?tab=reviews"
+           style="flex: 1; text-align: center; padding: 15px; text-decoration: none; font-weight: 600; font-size: 14px;
+                  color: @(Model.ActiveTab == "reviews" ? "var(--primary-color)" : "var(--text-light)");
+                  border-bottom: 3px solid @(Model.ActiveTab == "reviews" ? "var(--primary-color)" : "transparent");
+                  transition: all 0.3s;">
+            <i class="fas fa-comment-dots"></i> Phản hồi giảng viên
+            @if (Model.Reviews.Any())
+            {
+                <span class="badge badge-info" style="margin-left: 5px;">@Model.Reviews.Count</span>
+            }
+        </a>
+        <a href="/Student/Feedback?tab=notifications"
+           style="flex: 1; text-align: center; padding: 15px; text-decoration: none; font-weight: 600; font-size: 14px;
+                  color: @(Model.ActiveTab == "notifications" ? "var(--primary-color)" : "var(--text-light)");
+                  border-bottom: 3px solid @(Model.ActiveTab == "notifications" ? "var(--primary-color)" : "transparent");
+                  transition: all 0.3s;">
+            <i class="fas fa-bell"></i> Thông báo
+            @if (Model.UnreadCount > 0)
+            {
+                <span class="badge badge-danger" style="margin-left: 5px;">@Model.UnreadCount</span>
+            }
+        </a>
+    </div>
+
+    <div style="padding: 25px;">
+        @if (Model.ActiveTab == "reviews")
+        {
+            <!-- Reviews Tab -->
+            @if (Model.Reviews.Any())
+            {
+                @foreach (var review in Model.Reviews)
+                {
+                    <div style="background: var(--light-bg); padding: 16px 20px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid var(--primary-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+                            <div>
+                                <strong style="color: var(--primary-color); font-size: 15px;">
+                                    <i class="fas fa-user-tie"></i> @review.LecturerName
+                                </strong>
+                                <span style="margin-left: 10px;">
+                                    @if (review.PlanStatus == "Approved")
+                                    {
+                                        <span class="badge badge-success">Đã duyệt KH #@review.PlanId</span>
+                                    }
+                                    else if (review.PlanStatus == "Rejected")
+                                    {
+                                        <span class="badge badge-danger">Từ chối KH #@review.PlanId</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge badge-info">KH #@review.PlanId</span>
+                                    }
+                                </span>
+                            </div>
+                            <small style="color: var(--text-light);">
+                                <i class="fas fa-clock"></i> @review.ReviewedAt?.ToString("dd/MM/yyyy HH:mm")
+                            </small>
+                        </div>
+                        <p style="margin: 0; color: var(--text-dark); font-size: 14px; line-height: 1.6;">
+                            @(string.IsNullOrEmpty(review.Comment) ? "Không có nhận xét." : review.Comment)
+                        </p>
+                    </div>
+                }
+            }
+            else
+            {
+                <div style="text-align: center; padding: 40px 20px;">
+                    <i class="fas fa-comment-slash" style="font-size: 48px; color: var(--text-light); margin-bottom: 15px;"></i>
+                    <h3 style="color: var(--text-dark); margin-bottom: 10px;">Chưa có phản hồi</h3>
+                    <p style="color: var(--text-light);">Phản hồi từ giảng viên sẽ xuất hiện ở đây khi kế hoạch của bạn được review.</p>
+                </div>
+            }
+        }
+        else
+        {
+            <!-- Notifications Tab -->
+            @if (Model.Notifications.Any())
+            {
+                <div style="margin-bottom: 15px; text-align: right;">
+                    @if (Model.UnreadCount > 0)
+                    {
+                        <form method="post" asp-page-handler="MarkAllRead" style="display: inline;">
+                            <button type="submit" class="btn btn-sm btn-outline">
+                                <i class="fas fa-check-double"></i> Đánh dấu tất cả đã đọc
+                            </button>
+                        </form>
+                    }
+                </div>
+                @foreach (var n in Model.Notifications)
+                {
+                    var isUnread = n.IsRead != true;
+                    <div style="background: @(isUnread ? "rgba(136,189,242,0.08)" : "var(--light-bg)"); padding: 16px 20px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid @(isUnread ? "var(--accent-color)" : "#E9ECEF"); display: flex; justify-content: space-between; align-items: flex-start; gap: 15px;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                @if (isUnread)
+                                {
+                                    <span style="width: 8px; height: 8px; background: var(--accent-color); border-radius: 50; display: inline-block;"></span>
+                                }
+                                <small style="color: var(--text-light);">
+                                    <i class="fas fa-clock"></i> @n.CreatedAt?.ToString("dd/MM/yyyy HH:mm")
+                                </small>
+                            </div>
+                            <p style="margin: 0; color: var(--text-dark); font-size: 14px; line-height: 1.6;">
+                                @n.Content
+                            </p>
+                        </div>
+                        @if (isUnread)
+                        {
+                            <form method="post" asp-page-handler="MarkRead">
+                                <input type="hidden" name="notificationId" value="@n.Id" />
+                                <button type="submit" class="btn btn-sm btn-outline" title="Đánh dấu đã đọc"
+                                        style="padding: 4px 8px; min-width: auto;">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            </form>
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div style="text-align: center; padding: 40px 20px;">
+                    <i class="fas fa-bell-slash" style="font-size: 48px; color: var(--text-light); margin-bottom: 15px;"></i>
+                    <h3 style="color: var(--text-dark); margin-bottom: 10px;">Không có thông báo</h3>
+                    <p style="color: var(--text-light);">Thông báo hệ thống sẽ xuất hiện ở đây.</p>
+                </div>
+            }
+        }
+    </div>
+</div>

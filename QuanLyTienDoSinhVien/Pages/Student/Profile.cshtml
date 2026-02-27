@@ -1,0 +1,139 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Student.ProfileModel
+@{
+    ViewData["Title"] = "Hồ sơ sinh viên";
+    Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+
+@section Sidebar {
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a href="/Student/Dashboard" class="menu-link">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-text">Menu</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Profile" class="menu-link active">
+                <i class="fas fa-user menu-icon"></i>
+                <span class="menu-text">Sinh viên</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/StudyPlan" class="menu-link">
+                <i class="fas fa-book menu-icon"></i>
+                <span class="menu-text">Kế hoạch học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Progress" class="menu-link">
+                <i class="fas fa-chart-line menu-icon"></i>
+                <span class="menu-text">Tiến độ học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Warnings" class="menu-link">
+                <i class="fas fa-exclamation-triangle menu-icon"></i>
+                <span class="menu-text">Cảnh báo</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Feedback" class="menu-link">
+                <i class="fas fa-comments menu-icon"></i>
+                <span class="menu-text">Phản hồi</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Auth/Logout" class="menu-link">
+                <i class="fas fa-sign-out-alt menu-icon"></i>
+                <span class="menu-text">Đăng xuất</span>
+            </a>
+        </li>
+    </ul>
+}
+
+<div class="page-header">
+    <h2>Hồ sơ sinh viên</h2>
+    <p class="text-muted">Xem và chỉnh sửa thông tin cá nhân.</p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success"
+        style="background-color: rgba(40,167,69,0.1); color: var(--success); padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--success);">
+        <i class="fas fa-check-circle"></i> @Model.SuccessMessage
+    </div>
+}
+
+<!-- Student Info Card -->
+<div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title"><i class="fas fa-id-card"></i> Mã sinh viên</span>
+            <div class="stat-icon blue"><i class="fas fa-hashtag"></i></div>
+        </div>
+        <div class="stat-value" style="font-size: 22px;">@Model.CurrentStudent?.StudentCode</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title"><i class="fas fa-chalkboard"></i> Lớp</span>
+            <div class="stat-icon green"><i class="fas fa-users"></i></div>
+        </div>
+        <div class="stat-value" style="font-size: 22px;">@(Model.ClassName ?? "Chưa xếp lớp")</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title"><i class="fas fa-university"></i> Ngành</span>
+            <div class="stat-icon orange"><i class="fas fa-graduation-cap"></i></div>
+        </div>
+        <div class="stat-value" style="font-size: 22px;">@(Model.MajorName ?? "Chưa có")</div>
+    </div>
+</div>
+
+<!-- Edit Profile Form -->
+<div class="content-card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-edit"></i> Thông tin cá nhân</h3>
+    </div>
+    <form method="post">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+            <div class="form-group">
+                <label style="font-weight: 600; color: var(--text-dark); margin-bottom: 8px; display: block;">
+                    <i class="fas fa-user"></i> Họ và tên
+                </label>
+                <input type="text" name="FullName" value="@Model.FullName" class="form-control"
+                    style="width: 100%; padding: 10px 15px; border: 2px solid #E9ECEF; border-radius: 10px; font-size: 14px; transition: border-color 0.3s;"
+                    placeholder="Nhập họ tên..." />
+            </div>
+            <div class="form-group">
+                <label style="font-weight: 600; color: var(--text-dark); margin-bottom: 8px; display: block;">
+                    <i class="fas fa-envelope"></i> Email
+                </label>
+                <input type="email" name="Email" value="@Model.Email" class="form-control"
+                    style="width: 100%; padding: 10px 15px; border: 2px solid #E9ECEF; border-radius: 10px; font-size: 14px; transition: border-color 0.3s;"
+                    placeholder="Nhập email..." />
+            </div>
+            <div class="form-group">
+                <label style="font-weight: 600; color: var(--text-dark); margin-bottom: 8px; display: block;">
+                    <i class="fas fa-phone"></i> Số điện thoại
+                </label>
+                <input type="text" name="Phone" value="@Model.Phone" class="form-control"
+                    style="width: 100%; padding: 10px 15px; border: 2px solid #E9ECEF; border-radius: 10px; font-size: 14px; transition: border-color 0.3s;"
+                    placeholder="Nhập SĐT..." />
+            </div>
+            <div class="form-group">
+                <label style="font-weight: 600; color: var(--text-dark); margin-bottom: 8px; display: block;">
+                    <i class="fas fa-map-marker-alt"></i> Địa chỉ
+                </label>
+                <input type="text" name="Address" value="@Model.Address" class="form-control"
+                    style="width: 100%; padding: 10px 15px; border: 2px solid #E9ECEF; border-radius: 10px; font-size: 14px; transition: border-color 0.3s;"
+                    placeholder="Nhập địa chỉ..." />
+            </div>
+        </div>
+        <div style="text-align: right;">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Lưu thay đổi
+            </button>
+        </div>
+    </form>
+</div>
