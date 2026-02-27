@@ -1,0 +1,149 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Student.WarningsModel
+@{
+    ViewData["Title"] = "Cảnh báo";
+    Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+
+@section Sidebar {
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a href="/Student/Dashboard" class="menu-link">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-text">Menu</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Profile" class="menu-link">
+                <i class="fas fa-user menu-icon"></i>
+                <span class="menu-text">Sinh viên</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/StudyPlan" class="menu-link">
+                <i class="fas fa-book menu-icon"></i>
+                <span class="menu-text">Kế hoạch học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Progress" class="menu-link">
+                <i class="fas fa-chart-line menu-icon"></i>
+                <span class="menu-text">Tiến độ học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Warnings" class="menu-link active">
+                <i class="fas fa-exclamation-triangle menu-icon"></i>
+                <span class="menu-text">Cảnh báo</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Feedback" class="menu-link">
+                <i class="fas fa-comments menu-icon"></i>
+                <span class="menu-text">Phản hồi</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Auth/Logout" class="menu-link">
+                <i class="fas fa-sign-out-alt menu-icon"></i>
+                <span class="menu-text">Đăng xuất</span>
+            </a>
+        </li>
+    </ul>
+}
+
+<div class="page-header">
+    <h2>Cảnh báo vi phạm</h2>
+    <p class="text-muted">Danh sách các vi phạm và cảnh báo học tập.</p>
+</div>
+
+<!-- Warning Summary -->
+<div class="stats-grid" style="grid-template-columns: repeat(2, 1fr);">
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title"><i class="fas fa-exclamation-circle"></i> Tổng vi phạm</span>
+            <div class="stat-icon @(Model.TotalViolations > 0 ? "orange" : "green")">
+                <i class="fas @(Model.TotalViolations > 0 ? "fa-exclamation-triangle" : "fa-check-circle")"></i>
+            </div>
+        </div>
+        <div class="stat-value">@Model.TotalViolations</div>
+        <div class="stat-footer">
+            <span class="stat-label">
+                @(Model.TotalViolations == 0 ? "Không có vi phạm nào 🎉" : "vi phạm được ghi nhận")
+            </span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title"><i class="fas fa-shield-alt"></i> Trạng thái</span>
+            <div class="stat-icon @(Model.TotalViolations >= 3 ? "orange" : "green")">
+                <i class="fas fa-flag"></i>
+            </div>
+        </div>
+        <div class="stat-value" style="font-size: 22px;">
+            @if (Model.TotalViolations == 0)
+            {
+                <span style="color: var(--success);">Tốt</span>
+            }
+            else if (Model.TotalViolations < 3)
+            {
+                <span style="color: var(--warning);">Cần chú ý</span>
+            }
+            else
+            {
+                <span style="color: var(--danger);">Cảnh báo nghiêm trọng</span>
+            }
+        </div>
+        <div class="stat-footer">
+            <span class="stat-label">Mức độ cảnh báo hiện tại</span>
+        </div>
+    </div>
+</div>
+
+<!-- Violations List -->
+@if (Model.Violations.Any())
+{
+    <div class="content-card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-list"></i> Chi tiết vi phạm</h3>
+        </div>
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Ngày vi phạm</th>
+                        <th>Mô tả</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var index = 1;
+                    }
+                    @foreach (var v in Model.Violations)
+                    {
+                        <tr>
+                            <td>
+                                <span class="badge badge-danger">@index</span>
+                            </td>
+                            <td>
+                                <i class="fas fa-calendar-day" style="color: var(--text-light);"></i>
+                                @(v.ViolationDate?.ToString("dd/MM/yyyy") ?? "N/A")
+                            </td>
+                            <td>@(v.Description ?? "Không có mô tả")</td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+else
+{
+    <div class="content-card" style="text-align: center; padding: 60px 20px;">
+        <i class="fas fa-check-circle" style="font-size: 48px; color: var(--success); margin-bottom: 15px;"></i>
+        <h3 style="color: var(--text-dark); margin-bottom: 10px;">Không có vi phạm nào</h3>
+        <p style="color: var(--text-light);">Hãy tiếp tục phát huy! 🌟</p>
+    </div>
+}

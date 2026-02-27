@@ -1,0 +1,299 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Student.StudyPlanModel
+@{
+    ViewData["Title"] = "Kế hoạch học tập";
+    Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+
+@section Sidebar {
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a href="/Student/Dashboard" class="menu-link">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-text">Menu</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Profile" class="menu-link">
+                <i class="fas fa-user menu-icon"></i>
+                <span class="menu-text">Sinh viên</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/StudyPlan" class="menu-link active">
+                <i class="fas fa-book menu-icon"></i>
+                <span class="menu-text">Kế hoạch học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Progress" class="menu-link">
+                <i class="fas fa-chart-line menu-icon"></i>
+                <span class="menu-text">Tiến độ học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Warnings" class="menu-link">
+                <i class="fas fa-exclamation-triangle menu-icon"></i>
+                <span class="menu-text">Cảnh báo</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Feedback" class="menu-link">
+                <i class="fas fa-comments menu-icon"></i>
+                <span class="menu-text">Phản hồi</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Auth/Logout" class="menu-link">
+                <i class="fas fa-sign-out-alt menu-icon"></i>
+                <span class="menu-text">Đăng xuất</span>
+            </a>
+        </li>
+    </ul>
+}
+
+<div class="page-header">
+    <h2>Kế hoạch học tập</h2>
+    <p class="text-muted">Quản lý và theo dõi kế hoạch học tập của bạn.</p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div
+        style="background-color: rgba(220,53,69,0.1); color: var(--danger); padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--danger);">
+        <i class="fas fa-exclamation-circle"></i> @Model.ErrorMessage
+    </div>
+}
+
+<!-- Filter & Actions Bar -->
+<div class="content-card" style="padding: 15px 25px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <a href="/Student/StudyPlan"
+                class="btn btn-sm @(string.IsNullOrEmpty(Model.StatusFilter) || Model.StatusFilter == "All" ? "btn-primary" : "btn-outline")">Tất
+                cả</a>
+            <a href="/Student/StudyPlan?statusFilter=Pending"
+                class="btn btn-sm @(Model.StatusFilter == "Pending" ? "btn-primary" : "btn-outline")">Chờ duyệt</a>
+            <a href="/Student/StudyPlan?statusFilter=Approved"
+                class="btn btn-sm @(Model.StatusFilter == "Approved" ? "btn-primary" : "btn-outline")">Đã duyệt</a>
+            <a href="/Student/StudyPlan?statusFilter=Rejected"
+                class="btn btn-sm @(Model.StatusFilter == "Rejected" ? "btn-primary" : "btn-outline")">Từ chối</a>
+        </div>
+        <button type="button" class="btn btn-primary btn-sm"
+            onclick="document.getElementById('createModal').style.display='flex'">
+            <i class="fas fa-plus"></i> Tạo kế hoạch mới
+        </button>
+    </div>
+</div>
+
+<!-- Study Plans List -->
+@if (Model.StudyPlans.Any())
+{
+    @foreach (var plan in Model.StudyPlans)
+    {
+        <div class="content-card">
+            <div class="card-header">
+                <div>
+                    <h3 class="card-title" style="margin-bottom: 5px;">
+                        <i class="fas fa-clipboard-list"></i> Kế hoạch #@plan.Id
+                    </h3>
+                    <small style="color: var(--text-light);">
+                        <i class="fas fa-calendar"></i> Ngày tạo: @plan.CreatedAt?.ToString("dd/MM/yyyy HH:mm")
+                    </small>
+                </div>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    @if (plan.Status == "Approved")
+                    {
+                        <span class="badge badge-success"><i class="fas fa-check"></i> Đã duyệt</span>
+                    }
+                    else if (plan.Status == "Pending")
+                    {
+                        <span class="badge badge-warning"><i class="fas fa-clock"></i> Chờ duyệt</span>
+                    }
+                    else if (plan.Status == "Rejected" || plan.Status == "NeedsRevision")
+                    {
+                        <span class="badge badge-danger"><i class="fas fa-times"></i> Từ chối</span>
+                        <button type="button" class="btn btn-sm btn-outline" onclick="openEditModal(@plan.Id)">
+                            <i class="fas fa-edit"></i> Sửa
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <!-- Plan Details Table -->
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Mã môn</th>
+                            <th>Tên môn học</th>
+                            <th>Tín chỉ</th>
+                            <th>Học kỳ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var detail in plan.StudyPlanDetails)
+                        {
+                            <tr>
+                                <td><strong>@detail.Subject.Code</strong></td>
+                                <td>@detail.Subject.Name</td>
+                                <td>@detail.Subject.Credit</td>
+                                <td>@detail.Semester.Name</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Reviews -->
+            @if (plan.StudyPlanReviews.Any())
+            {
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #E9ECEF;">
+                    <h4 style="font-size: 14px; font-weight: 600; color: var(--text-dark); margin-bottom: 10px;">
+                        <i class="fas fa-comment-dots"></i> Phản hồi giảng viên
+                    </h4>
+                    @foreach (var review in plan.StudyPlanReviews)
+                    {
+                        <div style="background: var(--light-bg); padding: 12px 16px; border-radius: 10px; margin-bottom: 8px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                <strong style="color: var(--primary-color);">
+                                    <i class="fas fa-user-tie"></i> @review.Lecturer.FullName
+                                </strong>
+                                <small style="color: var(--text-light);">@review.ReviewedAt?.ToString("dd/MM/yyyy HH:mm")</small>
+                            </div>
+                            <p style="margin: 0; color: var(--text-dark); font-size: 14px;">@review.Comment</p>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+}
+else
+{
+    <div class="content-card" style="text-align: center; padding: 60px 20px;">
+        <i class="fas fa-folder-open" style="font-size: 48px; color: var(--text-light); margin-bottom: 15px;"></i>
+        <h3 style="color: var(--text-dark); margin-bottom: 10px;">Chưa có kế hoạch nào</h3>
+        <p style="color: var(--text-light);">Bấm "Tạo kế hoạch mới" để bắt đầu.</p>
+    </div>
+}
+
+<!-- Create Modal -->
+<div id="createModal"
+    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+    <div
+        style="background:var(--white); border-radius:15px; padding:30px; width:90%; max-width:600px; max-height:80vh; overflow-y:auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 style="margin:0; color:var(--dark-color);"><i class="fas fa-plus-circle"></i> Tạo kế hoạch mới</h3>
+            <button type="button" onclick="document.getElementById('createModal').style.display='none'"
+                style="background:none; border:none; font-size:24px; cursor:pointer; color:var(--text-light);">&times;</button>
+        </div>
+        <form method="post" asp-page-handler="Create">
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: 600; color: var(--text-dark); margin-bottom: 8px; display: block;">
+                    <i class="fas fa-calendar-alt"></i> Học kỳ
+                </label>
+                <select name="semesterId" required
+                    style="width:100%; padding:10px 15px; border:2px solid #E9ECEF; border-radius:10px; font-size:14px;">
+                    <option value="">-- Chọn học kỳ --</option>
+                    @foreach (var semester in Model.Semesters)
+                    {
+                        <option value="@semester.Id">@semester.Name (@semester.StartDate?.ToString("MM/yyyy") -
+                            @semester.EndDate?.ToString("MM/yyyy"))</option>
+                    }
+                </select>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: 600; color: var(--text-dark); margin-bottom: 8px; display: block;">
+                    <i class="fas fa-book"></i> Chọn môn học
+                </label>
+                <div
+                    style="max-height: 300px; overflow-y: auto; border: 2px solid #E9ECEF; border-radius: 10px; padding: 15px;">
+                    @foreach (var subject in Model.Subjects)
+                    {
+                        <label
+                            style="display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
+                            <input type="checkbox" name="subjectIds" value="@subject.Id"
+                                style="width: 18px; height: 18px; accent-color: var(--primary-color);" />
+                            <span><strong>@subject.Code</strong> - @subject.Name (@subject.Credit TC)</span>
+                        </label>
+                    }
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-outline"
+                    onclick="document.getElementById('createModal').style.display='none'">Hủy</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Tạo kế hoạch</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal"
+    style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:2000; justify-content:center; align-items:center;">
+    <div
+        style="background:var(--white); border-radius:15px; padding:30px; width:90%; max-width:600px; max-height:80vh; overflow-y:auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h3 style="margin:0; color:var(--dark-color);"><i class="fas fa-edit"></i> Chỉnh sửa kế hoạch</h3>
+            <button type="button" onclick="document.getElementById('editModal').style.display='none'"
+                style="background:none; border:none; font-size:24px; cursor:pointer; color:var(--text-light);">&times;</button>
+        </div>
+        <form method="post" asp-page-handler="Edit">
+            <input type="hidden" name="planId" id="editPlanId" />
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: 600; color: var(--text-dark); margin-bottom: 8px; display: block;">
+                    <i class="fas fa-calendar-alt"></i> Học kỳ
+                </label>
+                <select name="semesterId" required
+                    style="width:100%; padding:10px 15px; border:2px solid #E9ECEF; border-radius:10px; font-size:14px;">
+                    <option value="">-- Chọn học kỳ --</option>
+                    @foreach (var semester in Model.Semesters)
+                    {
+                        <option value="@semester.Id">@semester.Name (@semester.StartDate?.ToString("MM/yyyy") -
+                            @semester.EndDate?.ToString("MM/yyyy"))</option>
+                    }
+                </select>
+            </div>
+            <div style="margin-bottom: 20px;">
+                <label style="font-weight: 600; color: var(--text-dark); margin-bottom: 8px; display: block;">
+                    <i class="fas fa-book"></i> Chọn môn học
+                </label>
+                <div
+                    style="max-height: 300px; overflow-y: auto; border: 2px solid #E9ECEF; border-radius: 10px; padding: 15px;">
+                    @foreach (var subject in Model.Subjects)
+                    {
+                        <label
+                            style="display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid #f0f0f0; cursor: pointer;">
+                            <input type="checkbox" name="subjectIds" value="@subject.Id" class="edit-subject-checkbox"
+                                style="width: 18px; height: 18px; accent-color: var(--primary-color);" />
+                            <span><strong>@subject.Code</strong> - @subject.Name (@subject.Credit TC)</span>
+                        </label>
+                    }
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <button type="button" class="btn btn-outline"
+                    onclick="document.getElementById('editModal').style.display='none'">Hủy</button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Cập nhật</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function openEditModal(planId) {
+            document.getElementById('editPlanId').value = planId;
+            document.getElementById('editModal').style.display = 'flex';
+        }
+
+        // Close modals on backdrop click
+        document.getElementById('createModal').addEventListener('click', function (e) {
+            if (e.target === this) this.style.display = 'none';
+        });
+        document.getElementById('editModal').addEventListener('click', function (e) {
+            if (e.target === this) this.style.display = 'none';
+        });
+    </script>
+}
