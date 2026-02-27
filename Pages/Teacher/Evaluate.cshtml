@@ -1,0 +1,157 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Teacher.EvaluateModel
+@{
+    ViewData["Title"] = "Đánh giá sinh viên"; Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+
+@section Sidebar {
+    <div class="sidebar-sticky">
+        <div class="menu-section">
+            <h6 class="sidebar-heading">GIẢNG VIÊN</h6>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Dashboard"><span class="menu-icon"><i
+                                class="fas fa-clipboard-check"></i></span><span class="menu-text">Phê duyệt & Góp
+                            ý</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Students"><span class="menu-icon"><i
+                                class="fas fa-users"></i></span><span class="menu-text">Danh sách sinh viên</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Progress"><span class="menu-icon"><i
+                                class="fas fa-chart-line"></i></span><span class="menu-text">Theo dõi tiến độ</span></a>
+                </li>
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Notifications"><span class="menu-icon"><i
+                                class="fas fa-bell"></i></span><span class="menu-text">Gửi thông báo</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link active" href="/Teacher/Evaluate"><span
+                            class="menu-icon"><i class="fas fa-star"></i></span><span class="menu-text">Đánh giá sinh
+                            viên</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Assignments"><span class="menu-icon"><i
+                                class="fas fa-tasks"></i></span><span class="menu-text">Chấm điểm bài tập</span></a></li>
+            </ul>
+        </div>
+        <div class="menu-section mt-3">
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link menu-link text-danger" href="/Auth/Logout"><span
+                            class="menu-icon"><i class="fas fa-sign-out-alt"></i></span><span class="menu-text">Đăng
+                            xuất</span></a></li>
+            </ul>
+        </div>
+    </div>
+}
+
+<div class="page-header">
+    <h2><i class="fas fa-star"></i> Đánh giá sinh viên</h2>
+    <p class="text-muted">Ghi nhận vi phạm hoặc gửi nhận xét cho sinh viên.</p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div
+        style="background-color: rgba(40,167,69,0.1); color: var(--success); padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--success);">
+        <i class="fas fa-check-circle"></i> @Model.SuccessMessage</div>
+}
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div
+        style="background-color: rgba(220,53,69,0.1); color: var(--danger); padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--danger);">
+        <i class="fas fa-exclamation-circle"></i> @Model.ErrorMessage</div>
+}
+
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+    <!-- Add Violation -->
+    <div class="content-card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-exclamation-triangle"></i> Ghi nhận vi phạm</h3>
+        </div>
+        <form method="post" asp-page-handler="Violation">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 600; margin-bottom: 5px; display: block;">Sinh viên</label>
+                <select name="studentId" required
+                    style="width: 100%; padding: 10px; border: 2px solid #E9ECEF; border-radius: 8px;">
+                    @foreach (var s in Model.Students)
+                    {
+                        <option value="@s.Id">@s.StudentCode - @s.FullName (@s.ClassName)</option>
+                    }
+                </select>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 600; margin-bottom: 5px; display: block;">Mô tả vi phạm</label>
+                <textarea name="description" rows="3" required placeholder="Nội dung vi phạm..."
+                    style="width: 100%; padding: 10px; border: 2px solid #E9ECEF; border-radius: 8px; resize: vertical;"></textarea>
+            </div>
+            <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-flag"></i> Ghi nhận</button>
+        </form>
+    </div>
+
+    <!-- Add Comment -->
+    <div class="content-card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-comment"></i> Gửi nhận xét</h3>
+        </div>
+        <form method="post" asp-page-handler="Comment">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 600; margin-bottom: 5px; display: block;">Sinh viên</label>
+                <select name="studentId" required
+                    style="width: 100%; padding: 10px; border: 2px solid #E9ECEF; border-radius: 8px;">
+                    @foreach (var s in Model.Students)
+                    {
+                        <option value="@s.Id">@s.StudentCode - @s.FullName (@s.ClassName)</option>
+                    }
+                </select>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 600; margin-bottom: 5px; display: block;">Nhận xét</label>
+                <textarea name="comment" rows="3" required placeholder="Nội dung nhận xét..."
+                    style="width: 100%; padding: 10px; border: 2px solid #E9ECEF; border-radius: 8px; resize: vertical;"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-paper-plane"></i> Gửi nhận
+                xét</button>
+        </form>
+    </div>
+</div>
+
+<!-- Evaluation History -->
+<div class="content-card" style="margin-top: 20px;">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-history"></i> Lịch sử đánh giá gần đây</h3>
+    </div>
+    @if (Model.EvalHistories.Any())
+    {
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Loại</th>
+                        <th>MSSV</th>
+                        <th>Sinh viên</th>
+                        <th>Nội dung</th>
+                        <th>Ngày</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var e in Model.EvalHistories)
+                    {
+                        <tr>
+                            <td>
+                                @if (e.Type == "Violation")
+                                {
+                                    <span class="badge badge-danger"><i class="fas fa-flag"></i> Vi phạm</span>
+                                }
+                                else
+                                {
+                                    <span class="badge badge-info"><i class="fas fa-comment"></i> Nhận xét</span>
+                                }
+                            </td>
+                            <td><strong>@e.StudentCode</strong></td>
+                            <td>@e.StudentName</td>
+                            <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                @e.Description</td>
+                            <td>@e.Date?.ToString("dd/MM/yyyy HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p style="text-align: center; color: var(--text-light); padding: 20px;">Chưa có đánh giá nào.</p>
+    }
+</div>

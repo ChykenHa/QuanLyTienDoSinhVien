@@ -1,0 +1,172 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Teacher.AssignmentsModel
+@{ ViewData["Title"] = "Chấm điểm bài tập"; Layout = "~/Pages/Shared/_MainLayout.cshtml"; }
+
+@section Sidebar {
+    <div class="sidebar-sticky">
+        <div class="menu-section">
+            <h6 class="sidebar-heading">GIẢNG VIÊN</h6>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Dashboard"><span class="menu-icon"><i class="fas fa-clipboard-check"></i></span><span class="menu-text">Phê duyệt & Góp ý</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Students"><span class="menu-icon"><i class="fas fa-users"></i></span><span class="menu-text">Danh sách sinh viên</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Progress"><span class="menu-icon"><i class="fas fa-chart-line"></i></span><span class="menu-text">Theo dõi tiến độ</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Notifications"><span class="menu-icon"><i class="fas fa-bell"></i></span><span class="menu-text">Gửi thông báo</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Evaluate"><span class="menu-icon"><i class="fas fa-star"></i></span><span class="menu-text">Đánh giá sinh viên</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link active" href="/Teacher/Assignments"><span class="menu-icon"><i class="fas fa-tasks"></i></span><span class="menu-text">Chấm điểm bài tập</span></a></li>
+            </ul>
+        </div>
+        <div class="menu-section mt-3"><ul class="nav flex-column"><li class="nav-item"><a class="nav-link menu-link text-danger" href="/Auth/Logout"><span class="menu-icon"><i class="fas fa-sign-out-alt"></i></span><span class="menu-text">Đăng xuất</span></a></li></ul></div>
+    </div>
+}
+
+<div class="page-header">
+    <h2><i class="fas fa-tasks"></i> Tạo và chấm điểm bài tập</h2>
+    <p class="text-muted">Quản lý bài tập và chấm điểm cho sinh viên.</p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div style="background-color: rgba(40,167,69,0.1); color: var(--success); padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--success);"><i class="fas fa-check-circle"></i> @Model.SuccessMessage</div>
+}
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div style="background-color: rgba(220,53,69,0.1); color: var(--danger); padding: 15px 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid var(--danger);"><i class="fas fa-exclamation-circle"></i> @Model.ErrorMessage</div>
+}
+
+<div style="display: grid; grid-template-columns: 350px 1fr; gap: 20px;">
+    <!-- Left: Create + Assignment List -->
+    <div>
+        <!-- Create -->
+        <div class="content-card">
+            <div class="card-header"><h3 class="card-title"><i class="fas fa-plus-circle"></i> Tạo bài tập mới</h3></div>
+            <form method="post" asp-page-handler="Create">
+                <div style="margin-bottom: 12px;">
+                    <label style="font-weight: 600; font-size: 13px;">Môn - Lớp</label>
+                    <select name="subjectId" id="subjectSelect" required style="width: 100%; padding: 8px; border: 2px solid #E9ECEF; border-radius: 8px; font-size: 13px;">
+                        @foreach (var sc in Model.MySubjectClasses)
+                        {
+                            <option value="@sc.SubjectId" data-classid="@sc.ClassId">@sc.Subject.Name - @sc.Class.Name</option>
+                        }
+                    </select>
+                    <input type="hidden" name="classId" id="classIdHidden" value="@Model.MySubjectClasses.FirstOrDefault()?.ClassId" />
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label style="font-weight: 600; font-size: 13px;">Tiêu đề</label>
+                    <input type="text" name="title" required placeholder="Tên bài tập..." style="width: 100%; padding: 8px; border: 2px solid #E9ECEF; border-radius: 8px; font-size: 13px;" />
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <label style="font-weight: 600; font-size: 13px;">Mô tả</label>
+                    <textarea name="description" rows="2" placeholder="Mô tả..." style="width: 100%; padding: 8px; border: 2px solid #E9ECEF; border-radius: 8px; font-size: 13px; resize: vertical;"></textarea>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">
+                    <div>
+                        <label style="font-weight: 600; font-size: 13px;">Hạn nộp</label>
+                        <input type="date" name="dueDate" style="width: 100%; padding: 8px; border: 2px solid #E9ECEF; border-radius: 8px; font-size: 13px;" />
+                    </div>
+                    <div>
+                        <label style="font-weight: 600; font-size: 13px;">Điểm tối đa</label>
+                        <input type="number" name="maxScore" value="10" min="1" max="100" style="width: 100%; padding: 8px; border: 2px solid #E9ECEF; border-radius: 8px; font-size: 13px;" />
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm" style="width: 100%;"><i class="fas fa-plus"></i> Tạo</button>
+            </form>
+        </div>
+
+        <!-- Assignment List -->
+        <div class="content-card" style="margin-top: 15px;">
+            <div class="card-header"><h3 class="card-title"><i class="fas fa-list"></i> Bài tập đã tạo</h3></div>
+            <div style="max-height: 400px; overflow-y: auto;">
+                @foreach (var a in Model.AssignmentList)
+                {
+                    <a href="/Teacher/Assignments?assignmentId=@a.Id" style="display: block; padding: 12px 16px; border-bottom: 1px solid #f0f0f0; text-decoration: none; color: inherit; @(Model.SelectedAssignment?.Id == a.Id ? "background: rgba(136,189,242,0.1); border-left: 4px solid var(--primary-color);" : "")">
+                        <strong style="font-size: 14px; color: var(--text-dark);">@a.Title</strong><br />
+                        <small style="color: var(--text-light);">@a.Subject.Name - @a.Class.Name</small><br />
+                        <small style="color: var(--text-light);"><i class="fas fa-calendar"></i> @a.CreatedAt?.ToString("dd/MM/yyyy")</small>
+                        @if (a.DueDate.HasValue)
+                        {
+                            <small style="margin-left: 8px; color: @(a.DueDate < DateTime.Now ? "var(--danger)" : "var(--text-light)");"><i class="fas fa-clock"></i> Hạn: @a.DueDate.Value.ToString("dd/MM/yyyy")</small>
+                        }
+                    </a>
+                }
+                @if (!Model.AssignmentList.Any())
+                {
+                    <p style="text-align: center; padding: 20px; color: var(--text-light);">Chưa có bài tập.</p>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Right: Grading Panel -->
+    <div>
+        @if (Model.SelectedAssignment != null)
+        {
+            <div class="content-card">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-pen"></i> Chấm điểm: @Model.SelectedAssignment.Title</h3>
+                    <span class="badge badge-info">@Model.SelectedAssignment.Subject.Name - @Model.SelectedAssignment.Class.Name</span>
+                </div>
+                @if (!string.IsNullOrEmpty(Model.SelectedAssignment.Description))
+                {
+                    <p style="color: var(--text-light); font-size: 14px; margin-bottom: 15px;">@Model.SelectedAssignment.Description</p>
+                }
+                <form method="post" asp-page-handler="Grade">
+                    <input type="hidden" name="assignmentId" value="@Model.SelectedAssignment.Id" />
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead><tr><th>MSSV</th><th>Họ tên</th><th style="width: 120px;">Điểm / @Model.SelectedAssignment.MaxScore</th><th>Nhận xét</th><th>Đã chấm</th></tr></thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.Submissions.Count; i++)
+                                {
+                                    var sub = Model.Submissions[i];
+                                    <tr>
+                                        <td>
+                                            <strong>@sub.StudentCode</strong>
+                                            <input type="hidden" name="studentIds" value="@sub.StudentId" />
+                                        </td>
+                                        <td>@sub.FullName</td>
+                                        <td>
+                                            <input type="number" name="scores" value="@sub.Score" min="0" max="@Model.SelectedAssignment.MaxScore" step="0.1"
+                                                   style="width: 80px; padding: 6px; border: 2px solid #E9ECEF; border-radius: 6px; text-align: center;" />
+                                        </td>
+                                        <td>
+                                            <input type="text" name="comments" value="@sub.Comment" placeholder="Nhận xét..."
+                                                   style="width: 100%; padding: 6px; border: 2px solid #E9ECEF; border-radius: 6px; font-size: 13px;" />
+                                        </td>
+                                        <td>
+                                            @if (sub.GradedAt.HasValue)
+                                            {
+                                                <span class="badge badge-success"><i class="fas fa-check"></i> @sub.GradedAt.Value.ToString("dd/MM")</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge badge-warning">Chưa</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="text-align: right; margin-top: 15px;">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Lưu điểm</button>
+                    </div>
+                </form>
+            </div>
+        }
+        else
+        {
+            <div class="content-card" style="text-align: center; padding: 60px 20px;">
+                <i class="fas fa-hand-pointer" style="font-size: 48px; color: var(--text-light);"></i>
+                <h3 style="margin-top: 15px; color: var(--text-dark);">Chọn bài tập</h3>
+                <p style="color: var(--text-light);">Chọn bài tập từ danh sách bên trái để chấm điểm.</p>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    document.getElementById('subjectSelect')?.addEventListener('change', function () {
+        var opt = this.options[this.selectedIndex];
+        document.getElementById('classIdHidden').value = opt.getAttribute('data-classid');
+    });
+</script>
