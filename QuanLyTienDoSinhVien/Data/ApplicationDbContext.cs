@@ -18,8 +18,6 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<Class> Classes { get; set; }
 
-
-
     public virtual DbSet<Enrollment> Enrollments { get; set; }
 
     public virtual DbSet<Lecturer> Lecturers { get; set; }
@@ -27,6 +25,8 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<LecturerAssignment> LecturerAssignments { get; set; }
 
     public virtual DbSet<Major> Majors { get; set; }
+
+    public virtual DbSet<MajorSubject> MajorSubjects { get; set; }
 
     public virtual DbSet<Notification> Notifications { get; set; }
 
@@ -49,6 +49,10 @@ public partial class ApplicationDbContext : DbContext
     public virtual DbSet<User> Users { get; set; }
 
     public virtual DbSet<Violation> Violations { get; set; }
+
+    public virtual DbSet<Assignment> Assignments { get; set; }
+
+    public virtual DbSet<AssignmentSubmission> AssignmentSubmissions { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -433,6 +437,68 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.StudentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_violations_students");
+        });
+
+        modelBuilder.Entity<MajorSubject>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("major_subjects");
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.MajorId).HasColumnName("major_id");
+            entity.Property(e => e.SubjectId).HasColumnName("subject_id");
+            entity.Property(e => e.SemesterOrder).HasColumnName("semester_order");
+            entity.Property(e => e.IsRequired).HasDefaultValue(true).HasColumnName("is_required");
+            entity.HasIndex(new[] { "MajorId", "SubjectId" }).IsUnique();
+            entity.HasOne(d => d.Major).WithMany(p => p.MajorSubjects)
+                .HasForeignKey(d => d.MajorId).OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ms_majors");
+            entity.HasOne(d => d.Subject).WithMany(p => p.MajorSubjects)
+                .HasForeignKey(d => d.SubjectId).OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ms_subjects");
+        });
+
+        modelBuilder.Entity<Assignment>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("assignments");
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.SubjectId).HasColumnName("subject_id");
+            entity.Property(e => e.ClassId).HasColumnName("class_id");
+            entity.Property(e => e.LecturerId).HasColumnName("lecturer_id");
+            entity.Property(e => e.Title).HasMaxLength(200).HasColumnName("title");
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.DueDate).HasColumnType("datetime").HasColumnName("due_date");
+            entity.Property(e => e.MaxScore).HasDefaultValue(10.0).HasColumnName("max_score");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(getdate())").HasColumnType("datetime").HasColumnName("created_at");
+            entity.HasOne(d => d.Subject).WithMany(p => p.Assignments)
+                .HasForeignKey(d => d.SubjectId).OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assignments_subjects");
+            entity.HasOne(d => d.Class).WithMany(p => p.Assignments)
+                .HasForeignKey(d => d.ClassId).OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assignments_classes");
+            entity.HasOne(d => d.Lecturer).WithMany(p => p.Assignments)
+                .HasForeignKey(d => d.LecturerId).OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_assignments_lecturers");
+        });
+
+        modelBuilder.Entity<AssignmentSubmission>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.ToTable("assignment_submissions");
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AssignmentId).HasColumnName("assignment_id");
+            entity.Property(e => e.StudentId).HasColumnName("student_id");
+            entity.Property(e => e.Score).HasColumnName("score");
+            entity.Property(e => e.Comment).HasColumnName("comment");
+            entity.Property(e => e.SubmittedAt).HasDefaultValueSql("(getdate())").HasColumnType("datetime").HasColumnName("submitted_at");
+            entity.Property(e => e.GradedAt).HasColumnType("datetime").HasColumnName("graded_at");
+            entity.HasIndex(new[] { "AssignmentId", "StudentId" }).IsUnique();
+            entity.HasOne(d => d.Assignment).WithMany(p => p.AssignmentSubmissions)
+                .HasForeignKey(d => d.AssignmentId).OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_as_assignments");
+            entity.HasOne(d => d.Student).WithMany(p => p.AssignmentSubmissions)
+                .HasForeignKey(d => d.StudentId).OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_as_students");
         });
 
         OnModelCreatingPartial(modelBuilder);

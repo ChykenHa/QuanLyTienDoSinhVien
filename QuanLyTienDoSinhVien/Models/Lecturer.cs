@@ -20,4 +20,6 @@ public partial class Lecturer
     public virtual ICollection<StudyPlanReview> StudyPlanReviews { get; set; } = new List<StudyPlanReview>();
 
     public virtual User User { get; set; } = null!;
+
+    public virtual ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
 }

@@ -1,0 +1,152 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Teacher.StudentsModel
+@{
+    ViewData["Title"] = "Danh sách sinh viên";
+    Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+
+@section Sidebar {
+    <div class="sidebar-sticky">
+        <div class="menu-section">
+            <h6 class="sidebar-heading">GIẢNG VIÊN</h6>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/Teacher/Dashboard">
+                        <span class="menu-icon"><i class="fas fa-clipboard-check"></i></span>
+                        <span class="menu-text">Phê duyệt & Góp ý</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link active" href="/Teacher/Students">
+                        <span class="menu-icon"><i class="fas fa-users"></i></span>
+                        <span class="menu-text">Danh sách sinh viên</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/Teacher/Progress">
+                        <span class="menu-icon"><i class="fas fa-chart-line"></i></span>
+                        <span class="menu-text">Theo dõi tiến độ</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/Teacher/Notifications">
+                        <span class="menu-icon"><i class="fas fa-bell"></i></span>
+                        <span class="menu-text">Gửi thông báo</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/Teacher/Evaluate">
+                        <span class="menu-icon"><i class="fas fa-star"></i></span>
+                        <span class="menu-text">Đánh giá sinh viên</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/Teacher/Assignments">
+                        <span class="menu-icon"><i class="fas fa-tasks"></i></span>
+                        <span class="menu-text">Chấm điểm bài tập</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="menu-section mt-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link menu-link text-danger" href="/Auth/Logout">
+                        <span class="menu-icon"><i class="fas fa-sign-out-alt"></i></span>
+                        <span class="menu-text">Đăng xuất</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+
+<div class="page-header">
+    <h2><i class="fas fa-users"></i> Danh sách sinh viên</h2>
+    <p class="text-muted">Sinh viên thuộc các lớp bạn phụ trách.</p>
+</div>
+
+<!-- Search -->
+<div class="content-card" style="padding: 15px 25px;">
+    <form method="get" style="display: flex; gap: 10px; align-items: center;">
+        <div style="flex: 1; position: relative;">
+            <input type="text" name="search" value="@Model.SearchQuery" placeholder="Tìm theo tên hoặc MSSV..."
+                style="width: 100%; padding: 10px 15px 10px 40px; border: 2px solid #E9ECEF; border-radius: 10px; font-size: 14px;" />
+            <i class="fas fa-search"
+                style="position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--text-light);"></i>
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i> Tìm</button>
+        @if (!string.IsNullOrEmpty(Model.SearchQuery))
+        {
+            <a href="/Teacher/Students" class="btn btn-outline btn-sm">Xóa lọc</a>
+        }
+    </form>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid" style="grid-template-columns: repeat(2, 1fr); margin-top: 15px;">
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title"><i class="fas fa-user-graduate"></i> Tổng sinh viên</span>
+            <div class="stat-icon blue"><i class="fas fa-users"></i></div>
+        </div>
+        <div class="stat-value">@Model.StudentList.Count</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-header">
+            <span class="stat-title"><i class="fas fa-chalkboard"></i> Số lớp</span>
+            <div class="stat-icon green"><i class="fas fa-layer-group"></i></div>
+        </div>
+        <div class="stat-value">@Model.StudentList.Select(s => s.ClassName).Distinct().Count()</div>
+    </div>
+</div>
+
+<!-- Student Table -->
+<div class="content-card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-list"></i> Danh sách</h3>
+    </div>
+    @if (Model.StudentList.Any())
+    {
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>MSSV</th>
+                        <th>Họ tên</th>
+                        <th>Lớp</th>
+                        <th>Ngành</th>
+                        <th>Email</th>
+                        <th>SĐT</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var idx = 1;
+                    }
+                    @foreach (var s in Model.StudentList)
+                    {
+                        <tr>
+                            <td>@idx</td>
+                            <td><strong>@s.StudentCode</strong></td>
+                            <td>@s.FullName</td>
+                            <td><span class="badge badge-info">@s.ClassName</span></td>
+                            <td>@s.MajorName</td>
+                            <td>@(s.Email ?? "-")</td>
+                            <td>@(s.Phone ?? "-")</td>
+                        </tr>
+                        idx++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div style="text-align: center; padding: 40px;">
+            <i class="fas fa-user-slash" style="font-size: 48px; color: var(--text-light);"></i>
+            <p style="margin-top: 15px; color: var(--text-light);">Không tìm thấy sinh viên nào.</p>
+        </div>
+    }
+</div>

@@ -32,9 +32,15 @@
             </a>
         </li>
         <li class="menu-item">
-            <a href="/Student/Schedule" class="menu-link">
-                <i class="fas fa-calendar menu-icon"></i>
-                <span class="menu-text">Lịch trình</span>
+            <a href="/Student/Warnings" class="menu-link">
+                <i class="fas fa-exclamation-triangle menu-icon"></i>
+                <span class="menu-text">Cảnh báo</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Feedback" class="menu-link">
+                <i class="fas fa-comments menu-icon"></i>
+                <span class="menu-text">Phản hồi</span>
             </a>
         </li>
         <li class="menu-item">
@@ -139,10 +145,8 @@
                                 var completionPercent = progress?.CompletionPercent ?? 0;
                             }
                             <div class="progress" style="height: 8px;">
-                                <div class="progress-bar bg-primary" role="progressbar" 
-                                     style="width: @completionPercent%" 
-                                     aria-valuenow="@completionPercent" 
-                                     aria-valuemin="0" aria-valuemax="100"></div>
+                                <div class="progress-bar bg-primary" role="progressbar" style="width: @completionPercent%"
+                                    aria-valuenow="@completionPercent" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <small class="text-muted">@completionPercent%</small>
                         </td>

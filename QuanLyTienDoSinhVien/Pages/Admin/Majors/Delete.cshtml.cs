@@ -21,7 +21,6 @@ public class DeleteModel : PageModel
     public async Task<IActionResult> OnGetAsync(int id)
     {
         var major = await _context.Majors
-            .Include(m => m.Faculty)
             .FirstOrDefaultAsync(m => m.Id == id);
 
         if (major == null)

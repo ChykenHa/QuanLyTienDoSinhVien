@@ -126,6 +126,13 @@
                                     <span class="menu-text">Môn học</span>
                                 </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link menu-link @(Context.Request.Path.StartsWithSegments("/Admin/Curriculum") ? "active" : "")"
+                                    href="/Admin/Curriculum/Index">
+                                    <span class="menu-icon"><i class="fas fa-graduation-cap"></i></span>
+                                    <span class="menu-text">Chương trình đào tạo</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
 

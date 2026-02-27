@@ -1,0 +1,132 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Teacher.ProgressModel
+@{
+    ViewData["Title"] = "Theo dõi tiến độ"; Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+
+@section Sidebar {
+    <div class="sidebar-sticky">
+        <div class="menu-section">
+            <h6 class="sidebar-heading">GIẢNG VIÊN</h6>
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Dashboard"><span class="menu-icon"><i
+                                class="fas fa-clipboard-check"></i></span><span class="menu-text">Phê duyệt & Góp
+                            ý</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Students"><span class="menu-icon"><i
+                                class="fas fa-users"></i></span><span class="menu-text">Danh sách sinh viên</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link active" href="/Teacher/Progress"><span
+                            class="menu-icon"><i class="fas fa-chart-line"></i></span><span class="menu-text">Theo dõi tiến
+                            độ</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Notifications"><span class="menu-icon"><i
+                                class="fas fa-bell"></i></span><span class="menu-text">Gửi thông báo</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Evaluate"><span class="menu-icon"><i
+                                class="fas fa-star"></i></span><span class="menu-text">Đánh giá sinh viên</span></a></li>
+                <li class="nav-item"><a class="nav-link menu-link" href="/Teacher/Assignments"><span class="menu-icon"><i
+                                class="fas fa-tasks"></i></span><span class="menu-text">Chấm điểm bài tập</span></a></li>
+            </ul>
+        </div>
+        <div class="menu-section mt-3">
+            <ul class="nav flex-column">
+                <li class="nav-item"><a class="nav-link menu-link text-danger" href="/Auth/Logout"><span
+                            class="menu-icon"><i class="fas fa-sign-out-alt"></i></span><span class="menu-text">Đăng
+                            xuất</span></a></li>
+            </ul>
+        </div>
+    </div>
+}
+
+<div class="page-header">
+    <h2><i class="fas fa-chart-line"></i> Theo dõi tiến độ sinh viên</h2>
+    <p class="text-muted">Xem tiến độ học tập của sinh viên thuộc lớp phụ trách.</p>
+</div>
+
+<!-- Filter by Class -->
+<div class="content-card" style="padding: 15px 25px;">
+    <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
+        <span style="font-weight: 600; margin-right: 10px;"><i class="fas fa-filter"></i> Lớp:</span>
+        <a href="/Teacher/Progress"
+            class="btn btn-sm @(!Model.SelectedClassId.HasValue ? "btn-primary" : "btn-outline")">Tất cả</a>
+        @foreach (var c in Model.AssignedClasses)
+        {
+            <a href="/Teacher/Progress?classId=@c.Id"
+                class="btn btn-sm @(Model.SelectedClassId == c.Id ? "btn-primary" : "btn-outline")">@c.Name</a>
+        }
+    </div>
+</div>
+
+<!-- Chart -->
+<div class="content-card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-chart-bar"></i> Điểm trung bình theo sinh viên</h3>
+    </div>
+    <div style="height: 300px;"><canvas id="progressChart"></canvas></div>
+</div>
+
+<!-- Progress Table -->
+<div class="content-card">
+    <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-table"></i> Chi tiết tiến độ</h3>
+    </div>
+    @if (Model.ClassProgresses.Any())
+    {
+        <div class="table-responsive">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>MSSV</th>
+                        <th>Họ tên</th>
+                        <th>Lớp</th>
+                        <th>Môn hoàn thành</th>
+                        <th>Tiến độ</th>
+                        <th>Điểm TB</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in Model.ClassProgresses)
+                    {
+                        <tr>
+                            <td><strong>@s.StudentCode</strong></td>
+                            <td>@s.FullName</td>
+                            <td><span class="badge badge-info">@s.ClassName</span></td>
+                            <td>@s.CompletedSubjects / @s.TotalSubjects</td>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="flex: 1; height: 8px; background: #E9ECEF; border-radius: 4px;">
+                                        <div
+                                            style="width: @s.CompletionPercent%; height: 100%; background: linear-gradient(90deg, var(--primary-color), var(--accent-color)); border-radius: 4px;">
+                                        </div>
+                                    </div>
+                                    <small>@s.CompletionPercent%</small>
+                                </div>
+                            </td>
+                            <td><strong
+                                    style="color: @(s.AvgScore >= 5 ? "var(--success)" : s.AvgScore > 0 ? "var(--danger)" : "var(--text-light)")">@(s.AvgScore
+                            > 0 ? s.AvgScore.ToString("0.1") : "-")</strong></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div style="text-align: center; padding: 40px;"><i class="fas fa-chart-area"
+                style="font-size: 48px; color: var(--text-light);"></i>
+            <p style="margin-top: 15px; color: var(--text-light);">Chưa có dữ liệu tiến độ.</p>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        new Chart(document.getElementById('progressChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Model.ChartLabelsJson),
+                datasets: [{ label: 'Điểm TB', data: @Html.Raw(Model.ChartAvgJson), backgroundColor: 'rgba(136,189,242,0.6)', borderColor: 'rgba(106,137,167,1)', borderWidth: 2, borderRadius: 8 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 10 }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
+        });
+    </script>
+}

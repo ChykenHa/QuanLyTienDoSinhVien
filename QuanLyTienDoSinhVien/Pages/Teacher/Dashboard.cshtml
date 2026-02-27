@@ -1,0 +1,175 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Teacher.DashboardModel
+
+@{
+    ViewData["Title"] = "Phê duyệt & Góp ";
+    Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+@section Styles{
+    <link rel="stylesheet" href="~/css/rate.css" asp-append-version="true"/>
+}
+
+@section Sidebar {
+    <div class="sidebar-sticky">
+        <div class="menu-section">
+            <h6 class="sidebar-heading">GIẢNG VIÊN</h6>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link menu-link active" href="/Teacher/Dashboard">
+                        <span class="menu-icon"><i class="fas fa-clipboard-check"></i></span>
+                        <span class="menu-text">Phê duyệt & Góp ý</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/Teacher/Students">
+                        <span class="menu-icon"><i class="fas fa-users"></i></span>
+                        <span class="menu-text">Danh sách sinh viên</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/Teacher/Progress">
+                        <span class="menu-icon"><i class="fas fa-chart-line"></i></span>
+                        <span class="menu-text">Theo dõi tiến độ</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/Teacher/Notifications">
+                        <span class="menu-icon"><i class="fas fa-bell"></i></span>
+                        <span class="menu-text">Gửi thông báo</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/Teacher/Evaluate">
+                        <span class="menu-icon"><i class="fas fa-star"></i></span>
+                        <span class="menu-text">Đánh giá sinh viên</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="/Teacher/Assignments">
+                        <span class="menu-icon"><i class="fas fa-tasks"></i></span>
+                        <span class="menu-text">Chấm điểm bài tập</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div class="menu-section mt-3">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link menu-link text-danger" href="/Auth/Logout">
+                        <span class="menu-icon"><i class="fas fa-sign-out-alt"></i></span>
+                        <span class="menu-text">Đăng xuất</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+<div class="page-header">
+    <h2><i class="fas fa-clipboard-check"></i> Phê duyệt & Góp ý lộ trình</h2>
+    <p class="text-muted">Xem và phê duyệt kế hoạch học tập của sinh viên.</p>
+</div>
+<div class="teacher-dashboard">
+    <div class="student-list-panel content-card">
+        <div class="card-header">
+            <h3 class="card-title">Sinh viên chờ duyệt (@Model.StudentsWaiting.Count)</h3>
+        </div>
+        <div class="student-list">
+            @foreach (var sv in Model.StudentsWaiting)
+            {
+                <a asp-action="Details" asp-route-id="@sv.Id">
+                    <div class="student-card @(Model.SelectedPlan?.Id == sv.Id ? "selected" : "")">
+                        <div class="student-card-top">
+                            <div class="student-avatar">
+                                <i class="fas fa-user-graduate"></i>
+                            </div>
+                            <div class="student-info">
+                                <strong>@(sv.Student?.FullName ?? "Sinh viên")</strong>
+                                <small>@(sv.Student?.StudentCode ?? $"ID: {sv.StudentId}")</small>
+                            </div>
+                        </div>
+                        <div class="student-card-bottom">
+                            <span class="badge badge-warning">
+                                <i class="fas fa-clock"></i> @sv.Status
+                            </span>
+                            <small class="text-muted">
+                                @(sv.CreatedAt.HasValue ? sv.CreatedAt.Value.ToString("dd/MM/yyyy") : "")
+                            </small>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+        <section class="student-detail-panel">
+            @if (Model.SelectedPlan != null)
+            {
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Chi tiết kế hoạch #@Model.SelectedPlan.Id</h3>
+                        <span class="badge badge-warning">@Model.SelectedPlan.Status</span>
+                    </div>
+                    <div class="plan-info-grid">
+                        <div class="plan-info-item">
+                            <span class="label"><i class="fas fa-user"></i> Sinh viên</span>
+                            <span class="value">@(Model.SelectedPlan.Student?.FullName ?? "N/A")</span>
+                        </div>
+                        <div class="plan-info-item">
+                            <span class="label"><i class="fas fa-id-card"></i> Mã SV</span>
+                            <span class="value">@(Model.SelectedPlan.Student?.StudentCode ?? "N/A")</span>
+                        </div>
+                        <div class="plan-info-item">
+                            <span class="label"><i class="fas fa-calendar"></i> Ngày tạo</span>
+                            <span class="value">@(Model.SelectedPlan.CreatedAt?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")</span>
+                        </div>
+                    </div>
+                </div>
+                @if (Model.SelectedPlan.StudyPlanReviews.Any())
+                {
+                    <div class="content-card">
+                        <div class="card-header">
+                            <h3 class="card-title"><i class="fas fa-history"></i> Lịch sử phản hồi</h3>
+                        </div>
+                        @foreach (var review in Model.SelectedPlan.StudyPlanReviews.OrderByDescending(r => r.ReviewedAt))
+                        {
+                            <div class="review-item">
+                                <div class="review-header">
+                                    <strong><i class="fas fa-user-tie"></i> @(review.Lecturer?.FullName ?? "Giảng viên")</strong>
+                                    <small class="text-muted">@(review.ReviewedAt?.ToString("dd/MM/yyyy HH:mm") ?? "")</small>
+                                </div>
+                                <p class="review-comment">@review.Comment</p>
+                            </div>
+                        }
+                    </div>
+                }
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-pen"></i> Góp ý và nhận xét</h3>
+                    </div>
+                    <form method="post" asp-page-handler="Approve" asp-route-id="@Model.SelectedPlan.Id">
+                        <div class="form-group mb-3">
+                            <textarea asp-for="TeacherComment" class="form-control comment-textarea" rows="4"
+                                placeholder="Nhập góp ý cho sinh viên..."></textarea>
+                        </div>
+                        <div class="action-buttons">
+                            <button type="submit" name="newStatus" value="2" class="btn btn-approve">
+                                <i class="fas fa-check-circle"></i> Phê duyệt
+                            </button>
+                            <button type="submit" name="newStatus" value="3" class="btn btn-reject">
+                                <i class="fas fa-undo"></i> Yêu cầu chỉnh sửa
+                            </button>
+                        </div>
+                    </form>
+                </div> 
+            }
+            else
+            {
+                <div class="content-card empty-detail">
+                    <div class="empty-state">
+                        <i class="fas fa-hand-pointer"></i>
+                        <h4>Chọn một kế hoạch</h4>
+                        <p>Vui lòng chọn một sinh viên từ danh sách bên trái để xem chi tiết và phê duyệt.</p>
+                    </div>
+                </div>
+            }
+        </section>
+    </div>

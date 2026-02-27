@@ -17,4 +17,6 @@ public partial class Major
 
 
     public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
+
+    public virtual ICollection<MajorSubject> MajorSubjects { get; set; } = new List<MajorSubject>();
 }

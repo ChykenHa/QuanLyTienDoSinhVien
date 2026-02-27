@@ -18,4 +18,8 @@ public partial class Subject
     public virtual ICollection<LecturerAssignment> LecturerAssignments { get; set; } = new List<LecturerAssignment>();
 
     public virtual ICollection<StudyPlanDetail> StudyPlanDetails { get; set; } = new List<StudyPlanDetail>();
+
+    public virtual ICollection<MajorSubject> MajorSubjects { get; set; } = new List<MajorSubject>();
+
+    public virtual ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
 }

@@ -22,8 +22,7 @@
                 <dd class="col-sm-9">@Model.Major.Id</dd>
                 <dt class="col-sm-3">Tên Ngành</dt>
                 <dd class="col-sm-9"><strong>@Model.Major.Name</strong></dd>
-                <dt class="col-sm-3">Thuộc Khoa</dt>
-                <dd class="col-sm-9">@(Model.Major.Faculty?.Name ?? "Chưa gán")</dd>
+
             </dl>
             <form method="post">
                 <input type="hidden" asp-for="Major.Id" />

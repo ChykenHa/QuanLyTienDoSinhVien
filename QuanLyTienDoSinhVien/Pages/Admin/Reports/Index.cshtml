@@ -3,7 +3,137 @@
 @{
     ViewData["Title"] = "Báo cáo thống kê";
 }
+
 <div class="container-fluid">
     <h2><i class="fas fa-chart-bar"></i> Báo cáo thống kê</h2>
-    <p>Chức năng đang được phát triển...</p>
+    <p class="text-muted mb-4">Tổng quan số liệu hệ thống.</p>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-2 mb-3">
+            <div class="card text-center p-3">
+                <h6 class="text-muted">Sinh viên</h6>
+                <h3 class="text-primary mb-0">@Model.TotalStudents</h3>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="card text-center p-3">
+                <h6 class="text-muted">Giảng viên</h6>
+                <h3 class="text-info mb-0">@Model.TotalLecturers</h3>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="card text-center p-3">
+                <h6 class="text-muted">Lớp</h6>
+                <h3 class="text-success mb-0">@Model.TotalClasses</h3>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="card text-center p-3">
+                <h6 class="text-muted">Ngành</h6>
+                <h3 class="text-warning mb-0">@Model.TotalMajors</h3>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="card text-center p-3">
+                <h6 class="text-muted">Môn học</h6>
+                <h3 class="text-secondary mb-0">@Model.TotalSubjects</h3>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3">
+            <div class="card text-center p-3">
+                <h6 class="text-muted">GPA TB</h6>
+                <h3 class="text-danger mb-0">@Model.AvgGpa.ToString("0.00")</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Sinh viên theo ngành</h5>
+                </div>
+                <div class="card-body" style="height: 300px;"><canvas id="majorChart"></canvas></div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-chart-bar"></i> Phân bố điểm</h5>
+                </div>
+                <div class="card-body" style="height: 300px;"><canvas id="scoreChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Enrollment Stats -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-tasks"></i> Tỷ lệ hoàn thành</h5>
+                </div>
+                <div class="card-body text-center">
+                    @{
+                        var pct = Model.TotalEnrollments > 0 ? (Model.CompletedEnrollments * 100 /
+        Model.TotalEnrollments) : 0;
+                    }
+                    <h2 class="text-success">@pct%</h2>
+                    <p class="text-muted">@Model.CompletedEnrollments / @Model.TotalEnrollments lượt đăng ký hoàn thành
+                    </p>
+                    <div class="progress" style="height: 20px;">
+                        <div class="progress-bar bg-success" style="width: @pct%;">@pct%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-school"></i> Thống kê theo lớp</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Lớp</th>
+                                <th>Ngành</th>
+                                <th>Số SV</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var c in Model.ClassReports)
+                            {
+                                <tr>
+                                    <td><strong>@c.ClassName</strong></td>
+                                    <td>@c.MajorName</td>
+                                    <td><span class="badge bg-primary">@c.StudentCount</span></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    new Chart(document.getElementById('majorChart'), {
+        type: 'doughnut',
+        data: { labels: @Html.Raw(Model.MajorLabelsJson), datasets: [{ data: @Html.Raw(Model.MajorCountsJson), backgroundColor: ['#007bff', '#28a745', '#ffc107', '#dc3545', '#17a2b8', '#6f42c1'] }] },
+        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } } }
+    });
+    new Chart(document.getElementById('scoreChart'), {
+        type: 'bar',
+        data: { labels: @Html.Raw(Model.ScoreDistLabelsJson), datasets: [{ label: 'Số lượng', data: @Html.Raw(Model.ScoreDistCountsJson), backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#20c997', '#0dcaf0', '#198754'], borderRadius: 8 }] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
+    });
+</script>

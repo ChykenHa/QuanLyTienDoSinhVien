@@ -16,4 +16,6 @@ public partial class Class
     public virtual Major Major { get; set; } = null!;
 
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();
+
+    public virtual ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
 }

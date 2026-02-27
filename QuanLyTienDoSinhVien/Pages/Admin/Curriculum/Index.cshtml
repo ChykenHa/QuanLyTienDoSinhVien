@@ -1,0 +1,129 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Admin.Curriculum.IndexModel
+@{
+    ViewData["Title"] = "Chương trình đào tạo";
+}
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+    <div class="alert alert-success"><i class="fas fa-check-circle"></i> @Model.SuccessMessage</div>
+}
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+    <div class="alert alert-danger"><i class="fas fa-exclamation-circle"></i> @Model.ErrorMessage</div>
+}
+
+<div class="container-fluid">
+    <h2><i class="fas fa-graduation-cap"></i> Quản lý chương trình đào tạo</h2>
+    <p class="text-muted mb-4">Quản lý môn học theo từng ngành.</p>
+
+    <!-- Add Form -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Thêm môn vào chương trình</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" asp-page-handler="Add" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Ngành</label>
+                    <select name="majorId" class="form-select" required>
+                        @foreach (var m in Model.Majors)
+                        {
+                            <option value="@m.Id">@m.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Môn học</label>
+                    <select name="subjectId" class="form-select" required>
+                        @foreach (var s in Model.AllSubjects)
+                        {
+                            <option value="@s.Id">@s.Code - @s.Name (@s.Credit TC)</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Học kỳ</label>
+                    <select name="semesterOrder" class="form-select">
+                        <option value="">-- Chọn --</option>
+                        @for (int i = 1; i <= 8; i++)
+                        {
+                            <option value="@i">HK @i</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label fw-bold">Bắt buộc?</label>
+                    <select name="isRequired" class="form-select">
+                        <option value="true">Bắt buộc</option>
+                        <option value="false">Tự chọn</option>
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-success w-100"><i class="fas fa-plus"></i> Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Curriculum per Major -->
+    @foreach (var curr in Model.Curriculums)
+    {
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="fas fa-book"></i> @curr.Major.Name <span
+                        class="badge bg-info ms-2">@curr.Subjects.Count môn</span> <span
+                        class="badge bg-secondary ms-1">@curr.Subjects.Sum(s => s.Credit) TC</span></h5>
+            </div>
+            <div class="card-body p-0">
+                @if (curr.Subjects.Any())
+                {
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>Mã môn</th>
+                                <th>Tên môn</th>
+                                <th>Tín chỉ</th>
+                                <th>Học kỳ</th>
+                                <th>Loại</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var s in curr.Subjects)
+                            {
+                                <tr>
+                                    <td><strong>@s.SubjectCode</strong></td>
+                                    <td>@s.SubjectName</td>
+                                    <td>@s.Credit</td>
+                                    <td>@(s.SemesterOrder.HasValue ? $"HK {s.SemesterOrder}" : "-")</td>
+                                    <td>
+                                        @if (s.IsRequired)
+                                        {
+                                            <span class="badge bg-primary">Bắt buộc</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">Tự chọn</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        <form method="post" asp-page-handler="Delete" style="display: inline;">
+                                            <input type="hidden" name="id" value="@s.Id" />
+                                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                                onclick="return confirm('Xác nhận xóa?')"><i class="fas fa-trash"></i></button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <p class="text-muted text-center py-3">Chưa có môn học nào.</p>
+                }
+            </div>
+        </div>
+    }
+</div>

@@ -3,7 +3,103 @@
 @{
     ViewData["Title"] = "Cấu hình hệ thống";
 }
+
+@if (!string.IsNullOrEmpty(Model.SuccessMessage))
+{
+     <div class="alert alert-success"><i class="fas fa-check-circle"></i>
+        @Model.SuccessMessage</div>
+}
+@if (!string.IsNullOrEmpty(Model.ErrorMessage))
+{
+     <div class="alert alert-danger"><i
+            class="fas fa-exclamation-circle"></i> @Model.ErrorMessage</div>
+}
+
 <div class="container-fluid">
     <h2><i class="fas fa-cogs"></i> Cấu hình hệ thống</h2>
-    <p>Chức năng đang được phát triển...</p>
+    <p class="text-muted mb-4">Quản lý học kỳ và cấu hình hệ thống.</p>
+
+    <!-- Add Semester -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="fas fa-plus-circle"></i> Thêm học kỳ</h5>
+        </div>
+        <div class="card-body">
+            <form method="post" asp-page-handler="Add" class="row g-3 align-items-end">
+                <div class="col-md-4">
+                    <label class="form-label fw-bold">Tên học kỳ</label>
+                    <input type="text" name="name" class="form-control" required placeholder="VD: HK1 2026-2027" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Ngày bắt đầu</label>
+                    <input type="date" name="startDate" class="form-control" required />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label fw-bold">Ngày kết thúc</label>
+                    <input type="date" name="endDate" class="form-control" required />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-success w-100"><i class="fas fa-plus"></i> Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Semester List -->
+    <div class="card">
+        <div class="card-header">
+            <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> Danh sách học kỳ (@Model.Semesters.Count)</h5>
+        </div>
+        <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Tên học kỳ</th>
+                        <th>Ngày bắt đầu</th>
+                        <th>Ngày kết thúc</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var idx = 1; var today = DateOnly.FromDateTime(DateTime.Now);
+                    }
+                    @foreach (var s in Model.Semesters)
+                    {
+                        var isActive = s.StartDate <= today && s.EndDate >= today;
+                        <tr>
+                            <td>@idx</td>
+                            <td><strong>@s.Name</strong></td>
+                            <td>@s.StartDate?.ToString("dd/MM/yyyy")</td>
+                            <td>@s.EndDate?.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @if (isActive)
+                                {
+                                    <span class="badge bg-success">Đang diễn ra</span>
+                                }
+                                else if (s.EndDate < today)
+                                {
+                                    <span class="badge bg-secondary">Đã kết thúc</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info">Sắp tới</span>
+                                }
+                            </td>
+                            <td>
+                                <form method="post" asp-page-handler="Delete" style="display: inline;">
+                                    <input type="hidden" name="id" value="@s.Id" />
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Xóa học kỳ này?')"><i class="fas fa-trash"></i></button>
+                                </form>
+                            </td>
+                        </tr>
+                        idx++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
