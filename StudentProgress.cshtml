@@ -1,0 +1,178 @@
+@page
+@model QuanLyTienDoSinhVien.Pages.Teacher.StudentProgressModel
+@using System.Linq
+@{
+    ViewData["Title"] = "Dashboard - Sinh viên";
+    Layout = "~/Pages/Shared/_MainLayout.cshtml";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/student-progress.css" asp-append-version="true" />
+}
+
+@section Sidebar {
+    <ul class="sidebar-menu">
+        <li class="menu-item">
+            <a href="/Student/Dashboard" class="menu-link active">
+                <i class="fas fa-home menu-icon"></i>
+                <span class="menu-text">Menu</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Profile" class="menu-link">
+                <i class="fas fa-user menu-icon"></i>
+                <span class="menu-text">Xem danh sách sinh viên</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Teacher/StudentProgress" class="menu-link">
+                <i class="fas fa-book menu-icon"></i>
+                <span class="menu-text">Theo dõi tiến độ sinh viên</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Progress" class="menu-link">
+                <i class="fas fa-chart-line menu-icon"></i>
+                <span class="menu-text">Tiến độ học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Student/Schedule" class="menu-link">
+                <i class="fas fa-calendar menu-icon"></i>
+                <span class="menu-text">Phê duyệt và góp ý lộ trình học tập</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="/Auth/Logout" class="menu-link">
+                <i class="fas fa-sign-out-alt menu-icon"></i>
+                <span class="menu-text">Đăng xuất</span>
+            </a>
+        </li>
+    </ul>
+}
+
+<div class="progress-header">
+    <div>
+            <h2>Theo dõi tiến độ sinh viên</h2>
+            <span class="update-time">Cập nhật lần cuối: 08:36:44</span>
+    </div>
+        <span class="realtime-badge">● Real-time updated</span>
+</div>
+
+<div class="progress-page">
+
+    <div class="filter-row">
+        <form method="get">
+            <input type="text" name="Search"
+                value="@Model.Search"
+                placeholder="Tìm tên hoặc MSSV..." />
+
+            <select name="ClassFilter">
+                <option value="">Tất cả lớp</option>
+                @foreach (var c in Model.ClassList)
+                {
+                    <option value="@c" selected="@(Model.ClassFilter == c)">
+                        @c
+                    </option>
+                }
+            </select>
+
+            <select name="MajorFilter">
+                <option value="">Tất cả ngành</option>
+                @foreach (var m in Model.MajorList)
+                {
+                    <option value="@m" selected="@(Model.MajorFilter == m)">
+                        @m
+                    </option>
+                }
+            </select>
+
+            <select name="StatusFilter">
+                <option value="">Tất cả</option>
+                <option value="normal" selected="@(Model.StatusFilter == "normal")">Bình thường</option>
+                <option value="warning" selected="@(Model.StatusFilter == "warning")">Cảnh báo</option>
+                <option value="danger" selected="@(Model.StatusFilter == "danger")">Nguy cơ</option>
+            </select>
+
+            <button type="submit">Lọc</button>
+        </form>
+    </div>      
+
+    <div class="stat-row">
+        <div class="stat-card">
+                <h3>@Model.TotalStudents</h3>
+                <p>Tổng sinh viên</p>
+        </div>
+
+        <div class="stat-card green">
+            <h3>@Model.NormalCount</h3>
+            <p>Bình thường</p>
+        </div>
+
+        <div class="stat-card yellow">
+            <h3>@Model.WarningCount</h3>
+            <p>Cảnh báo</p>
+        </div>
+
+        <div class="stat-card red">
+            <h3>@Model.DangerCount</h3>
+            <p>Nguy cơ</p>
+        </div>        
+    </div>
+
+    @foreach (var student in Model.Students)
+{
+    var gpa = student.GPA;
+
+    var avgCompletion = student.Courses.Count > 0
+        ? student.Courses.Average(c => c.Completion ?? 0)
+        : 0;
+
+    var statusClass = gpa >= 8 ? "normal"
+                     : gpa >= 5 ? "warning"
+                     : "danger";
+
+    <div class="student-card">
+        <div class="student-header">
+            <div class="avatar">@student.FullName.Substring(0,1)</div>
+            <div>
+                <h4>
+                    @student.FullName
+                    <span class="status @statusClass">
+                        @(gpa >= 8 ? "Bình thường"
+                          : gpa >= 5 ? "Cảnh báo"
+                          : "Nguy cơ")
+                    </span>
+                </h4>
+                <p>MSSV: @student.StudentCode</p>
+                <p>Lớp: @student.ClassName | Ngành: @student.MajorName</p>
+            </div>
+            <div class="gpa">
+                <span>GPA</span>
+                <strong>@gpa.ToString("0.00")</strong>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <span>Tiến độ chung</span>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width:@avgCompletion%"></div>
+            </div>
+            <span class="percent">@Math.Round(avgCompletion)%</span>
+        </div>
+
+        <div class="course-list">
+            @foreach (var course in student.Courses)
+            {
+                <div class="course @(course.Completion == 100 ? "completed" : "studying")">
+                    <strong>@course.SubjectName</strong>
+                    <span>@course.Credit TC</span>
+                    <span class="score">
+                        @(course.Score.HasValue ? course.Score.Value.ToString("0.##") : "")
+                    </span>
+                </div>
+            }
+        </div>
+    </div>
+}
+</div>
